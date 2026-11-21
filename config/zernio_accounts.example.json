@@ -1,0 +1,14 @@
+{
+  "instagram": {
+    "account_id": "acc_instagram_placeholder",
+    "name": "Your Instagram Account",
+    "platform": "instagram"
+  },
+  "youtube": {
+    "account_id": "acc_youtube_placeholder",
+    "name": "Your YouTube Channel",
+    "platform": "youtube"
+  },
+  "discovered_at": null,
+  "notes": "Run 'python scripts/bootstrap.py' or 'python main.py --verify-zernio' with your ZERNIO_API_KEY to auto-populate"
+}

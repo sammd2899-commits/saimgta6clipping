@@ -1,0 +1,127 @@
+{
+  "video": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 60,
+    "codec": "libx264",
+    "bitrate": "6M",
+    "target_duration_sec": [18, 38],
+    "hard_duration_bounds_sec": [12, 55],
+    "trim_silence_over_sec": 0.6,
+    "audio_loudnorm_lufs": -14,
+    "external_watermarks_allowed": false
+  },
+  "layout": {
+    "mode": "stacked_split_screen",
+    "facecam_top_ratio": 0.35,
+    "facecam_height_px": 672,
+    "gameplay_bottom_ratio": 0.65,
+    "gameplay_height_px": 1248,
+    "fallback_if_no_facecam": "full_bleed_with_blurred_vertical_fill",
+    "reaction_peak_zoom_percent": 108
+  },
+  "safe_zones_px": {
+    "top_dead_zone": 250,
+    "bottom_dead_zone": 430,
+    "right_dead_zone": 140,
+    "left_margin": 60,
+    "universal_safe_box": "890x1250"
+  },
+  "hook_banner": {
+    "enabled": true,
+    "duration_sec": 2.5,
+    "y_position_px": 290,
+    "max_words": 7,
+    "font_size_px": 56,
+    "style": "bold_white_text_thick_black_outline_or_dark_pill",
+    "viral_templates": [
+      "This looks normal, until the end...",
+      "Wait until you see what this NPC does",
+      "He didn't see what was behind him",
+      "Bro really tried escaping cops on THIS",
+      "GTA 6 NPCs are actually terrifying...",
+      "Instant karma in under 2 seconds",
+      "Nobody expected Rockstar to add THIS",
+      "Worst getaway driver in Vice City",
+      "Watch the police AI at 0:08",
+      "He stole a fighter jet and regretted it"
+    ],
+    "power_words": [
+      "Wait",
+      "Nobody",
+      "Actually",
+      "Instant",
+      "Secret",
+      "Terrifying",
+      "Impossible",
+      "Broke",
+      "Wrong",
+      "First time"
+    ]
+  },
+  "captions": {
+    "engine": "whisper_word_timestamps_ass",
+    "font_primary": "Montserrat ExtraBold",
+    "font_fallback": "Anton",
+    "font_size_px": 68,
+    "words_per_chunk": [2, 4],
+    "y_range_px": [1150, 1320],
+    "text_color": "#FFFFFF",
+    "outline_color": "#000000",
+    "outline_px": 5,
+    "active_word_highlight": "#FFE600",
+    "alternate_highlight": "#00E5FF"
+  },
+  "viral_moment_selection": {
+    "core_rule": "one_single_idea_per_clip_open_immediately_on_chaos",
+    "prioritize": [
+      "smart_or_creepy_npc_ai_reactions",
+      "absurd_vehicle_or_police_escape_chaos",
+      "shocking_crash_physics_ragdoll_and_glitches",
+      "hidden_map_easter_eggs_and_high_risk_stunts",
+      "instant_karma_heist_fails_and_chat_trolling"
+    ],
+    "strictly_skip": [
+      "isolated_story_cutscenes_and_endings_copyright_risk",
+      "loud_licensed_in_game_radio_songs_content_id_risk",
+      "nsfw_strip_club_or_shower_scenes_shadowban_risk",
+      "silent_driving_or_slow_buildup"
+    ]
+  },
+  "platform_metadata": {
+    "instagram_reels": {
+      "max_hashtags": 5,
+      "required_campaign_tags": [
+        "#GTA6",
+        "#GrandTheftAutoVI"
+      ],
+      "extra_tags_max_2": [
+        "#GTAVI",
+        "#GamingClips"
+      ],
+      "dm_share_triggers": [
+        "Send this to your GTA duo 😭",
+        "Tag the friend who drives like this",
+        "Would you survive this chase? 👇",
+        "Rate this escape 1–10 💀"
+      ],
+      "mandatory_credit": "Watch the official livestream creator",
+      "mandatory_channel_tag": "@Creator",
+      "cover_frame": "1080x1920 centered reaction frame (1:1 profile grid safe)"
+    },
+    "youtube_shorts": {
+      "title_max_chars": 65,
+      "title_style": "curiosity_gap_english_plus_#Shorts",
+      "category": "Gaming",
+      "language": "en-US",
+      "likes_visible": true,
+      "mandatory_credit_in_description": "Watch the official livestream creator",
+      "mandatory_channel_tag": "@Creator",
+      "description_tags": [
+        "#GTA6",
+        "#GrandTheftAutoVI",
+        "#Shorts"
+      ]
+    }
+  }
+}

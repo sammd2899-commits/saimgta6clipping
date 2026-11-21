@@ -1,0 +1,15 @@
+{
+  "timezone": "Asia/Kolkata",
+  "utc_offset_hours": 5.5,
+  "daily_slots_ist": [
+    "14:00",
+    "16:00",
+    "18:00",
+    "20:00",
+    "22:00"
+  ],
+  "max_clips_per_day": 5,
+  "min_lead_minutes": 15,
+  "notes": "Awake-hour schedule (14:00, 16:00, 18:00, 20:00, 22:00 IST / customizable)",
+  "updated_at": "2026-11-21T00:00:00Z"
+}

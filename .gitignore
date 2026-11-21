@@ -1,0 +1,53 @@
+# Environment and Secrets (CRITICAL)
+.env
+*.env
+.env.*
+!.env.example
+
+# Local Configuration overrides (only .example.json committed)
+config/zernio_accounts.json
+config/active_campaign.json
+config/schedule_config.json
+!config/*.example.json
+!config/editing_rules.json
+
+# Intermediate clip processing and raw media
+temp/
+output/
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.jpg
+*.jpeg
+*.png
+*.wav
+*.ass
+
+# User state and personal logs
+state/
+logs/
+
+# Python caches and virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+.venv/
+venv/
+env/
+ENV/
+build/
+dist/
+*.egg-info/
+
+# Operating System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE and Editor configs
+.vscode/
+.idea/
+*.swp
+*.swo

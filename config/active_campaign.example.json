@@ -1,0 +1,15 @@
+{
+  "campaign_name": "GTA 6 Clipping Campaign",
+  "allowed_source": "Official GTA 6 livestreams and gameplay replays",
+  "required_caption_text": "Watch the official creator on YouTube and Twitch",
+  "required_hashtags": [
+    "#GTA6",
+    "#GrandTheftAutoVI"
+  ],
+  "required_channel_tag": "@Creator",
+  "language": "English (optimized for Tier-1 audience: US, UK, Canada, Australia)",
+  "quality_rules": "Strong 1-2 second hook, original edit, dynamic word-pop captions, likes publicly visible, keep public for 30+ days, max 5 near-identical clips, NO low-effort raw screen recordings",
+  "safety_filters": "Skip isolated GTA 6 story cutscenes/endings (copyright strike risk) and skip loud licensed in-game radio songs (Content ID risk)",
+  "watermark_path": null,
+  "updated_at": "2026-11-21T00:00:00Z"
+}
