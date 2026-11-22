@@ -4,14 +4,18 @@
 .env.*
 !.env.example
 
-# Backup files
+# Backup and temp files
 *.bak
 *.backup
 
-# Local Configuration overrides (only .example.json committed)
+# Local Configuration overrides (only .example.json and example presets committed)
 config/zernio_accounts.json
 config/active_campaign.json
 config/schedule_config.json
+config/watched_streamers.json
+config/brand_kit.md
+config/presets/*.json
+!config/presets/example_campaign.json
 !config/*.example.json
 !config/editing_rules.json
 
@@ -22,9 +26,18 @@ memory/learned_rules.md
 !memory/*.template.*
 !memory/*.template.json
 
+# User state and personal logs (only templates and .gitkeep committed)
+state/*
+!state/.gitkeep
+!state/*.template.json
+logs/*
+!logs/.gitkeep
+
 # Intermediate clip processing and raw media
-temp/
-output/
+temp/*
+!temp/.gitkeep
+output/*
+!output/.gitkeep
 *.mp4
 *.mov
 *.avi
@@ -40,10 +53,6 @@ assets/*.png
 assets/*.jpg
 assets/*.jpeg
 !assets/.gitkeep
-
-# User state and personal logs
-state/
-logs/
 
 # Python caches and virtual environments
 __pycache__/

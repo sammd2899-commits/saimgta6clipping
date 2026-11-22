@@ -1,0 +1,25 @@
+{
+  "campaign_name": "GTA VI Clipping Campaign",
+  "campaign_slug": "example_campaign",
+  "allowed_source": "Any official GTA VI streamer gameplay ONLY (no reuploads with other creators' watermarks)",
+  "required_caption_text": "Watch the official livestream creator",
+  "required_channel_tag": "@Creator",
+  "required_hashtags": [
+    "#GTA6",
+    "#GTAVI",
+    "#GamingClips"
+  ],
+  "watermark_path": null,
+  "logo_rules": "If watermark_path is set (e.g. 'assets/campaign_logo.png'), keep visible for 100% of clip duration (0.0s to end). Preserve exact 3:1 aspect ratio. Never cover with captions or hook banner.",
+  "min_post_retention_days": 60,
+  "tier1_only_payout": "US, UK, Canada, Australia ONLY (30%+ Tier-1 required on IG; 0.5%+ likes+comments engagement; 100% Western English copy, zero Hindi/Hinglish).",
+  "quality_rules": "Strong 1-2 second hook, original edit, dynamic word-pop captions, likes publicly visible, keep public for 60+ days, max 5 near-identical clips, NO low-effort raw screen recordings.",
+  "safety_filters": "Skip isolated GTA 6 story cutscenes/endings (copyright strike risk) and skip loud licensed in-game radio songs (Content ID risk).",
+  "allowed_streamers": [
+    "Typical Gamer",
+    "KreekCraft",
+    "The Boys Gaming"
+  ],
+  "notes": "Starter preset for GTA 6 Whop Content Rewards campaigns. Use 'switch campaign' in chat to swap presets.",
+  "updated_at": "2026-11-23T00:00:00+05:30"
+}

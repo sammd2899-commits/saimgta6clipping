@@ -1,102 +1,142 @@
 ---
 name: saimgta6clipping
-description: Automated GTA 6 viral clipping studio with deterministic auto-ranking, closed-loop analytics learning engine, 2026 safe-zone visual enhancer (1080x1920 60fps, 2.5s hook banner, word-pop ASS captions), fixed awake IST scheduling (Asia/Kolkata -> UTC), and Whop Content Rewards compliance. Use when asked to clip GTA 6 streams, generate viral Shorts/Reels, manage campaign rules, schedule clips, learn from analytics, or clone winners.
+description: Automated GTA 6 stream clipping studio with priority-ordered resumable onboarding wizard, auto-VOD streamer watcher, campaign preset switcher, deterministic candidate auto-ranking, 2026 safe-zone visual enhancer (1080x1920 60fps, 2.5s hook banner, word-pop ASS captions), Zernio multi-platform scheduling, and Whop Content Rewards compliance. Use when asked to clip GTA 6 livestreams, set up the clipping workspace, check new streams, switch campaign presets, learn from analytics, or clone winners.
 ---
 
 # SaimGTA6Clipping
 
-Autonomous GTA 6 Stream Clipping & Scheduled Auto-Posting Pipeline.  
-Engineered for zero-hallucination, chunked execution on high-speed and lightweight models (such as Gemini Flash).
+Autonomous GTA 6 Stream Clipping, Auto-Ranking & Scheduled Multi-Platform Studio (v3.0).  
+Engineered with an anti-hallucination chunked state machine, smart agent-vs-manual automation, and persistent continuous learning.
 
 ---
 
-## 0. First Run / Zero-Manual-Setup Onboarding
+## 0. Resumable Onboarding Architecture
 
-When triggered on a new machine or empty environment:
+Whenever the user activates this skill or says *"set up clipping"*, *"start setup"*, or runs on a fresh workspace:
 
-1. **Auto-Bootstrap:**
-   Run the bootstrapper to verify dependencies, scaffold directories, and unpack templates:
-   ```bash
-   python scripts/bootstrap.py
-   ```
-2. **Collect User Configuration:**
-   Prompt the user in chat for the following 3 quick inputs:
-   - **Zernio API Key:** Save to `.env` (`ZERNIO_API_KEY=...`) and run `python main.py --verify-zernio` to sync connected Instagram and YouTube accounts.
-   - **Active Campaign Brief:** Save to `config/active_campaign.json` (Campaign name, required caption attribution, creator tag, required hashtags, and optional watermark path).
-   - **Posting Schedule:** Confirm timezone and awake-hour slots in `config/schedule_config.json` (default 5 clips/day: 14:00, 16:00, 18:00, 20:00, 22:00 IST).
-3. **Notify User:**
-   Output: *"Setup complete — paste your first GTA 6 YouTube livestream link to start clipping!"*
+1. **Inspect Onboarding State:**
+   Read `state/onboarding_state.json` (or initialize it from `state/onboarding_state.template.json` via `python scripts/bootstrap.py`).
+2. **Resume at Exact Pending Step:**
+   Check `setup_complete`. If `true`, output:
+   *"Workspace is 100% verified and ready! Say 'check new streams' to scan watched channels, or paste any YouTube livestream link to start clipping."*
+   If `false`, resume execution at the first step where `status == "pending"`.
+3. **Core Automation Rule for the Agent:**
+   > Anything the agent can do itself (running scripts, creating configs, generating brand assets, discovering API account IDs, parsing campaign briefs into presets, converting timezones to UTC, writing `.env`, running health checks), the agent **MUST do automatically**.
+   > Only hand over strictly required human actions (account sign-ups, OAuth logins, 2FA, and Whop clicks) as ultra-short numbered checklists—and wait for user confirmation before advancing.
 
 ---
 
-## 1. Natural Language Chat Commands
+## 1. Phase A — Required Core Setup (Execute in Strict Order)
 
-The assistant recognizes and executes the following chat triggers:
+### Step 1: Auto-Install Tools & Workspace (`Agent Automated`)
+- **Agent Action:** Run `python scripts/bootstrap.py`.
+- **Behavior:** The script checks whether Python >= 3.10, FFmpeg/ffprobe, yt-dlp, and core packages are installed, installs missing packages without 3D/Blender bloatware, and scaffolds folders and templates.
+- **Agent Output:** Report green status checks, update `steps.step_1_bootstrap.status = "completed"`, and immediately proceed to Step 2.
+
+### Step 2: Brand & Channel Kit Generation (`Agent Automated`)
+- **Agent Action:** Ask the user **ONLY 1 question**:
+  *"What is your target niche/game (default: GTA 6 / Gaming) and preferred brand vibe (e.g. Neon Miami Vice, Dark Street Heists, High-Energy Glitch Reactions)?"*
+- **Agent Automation:** Upon receiving the reply (or if user accepts defaults), automatically generate and write `config/brand_kit.md`:
+  - Matching **Instagram + YouTube channel name** (e.g., `ViceCityClips_`, `GTA6Pursuits`, `HeistPulse`)
+  - Unique handle ideas (`@vicecityclips_`, `@gta6pursuits`)
+  - Optimized bio & description with discovery keywords and Tier-1 engagement hooks
+  - 15 YouTube channel search keywords (e.g., `GTA 6, GTA VI, GTA 6 clips, Vice City gameplay...`)
+  - Profile picture, banner, and logo prompt specifications
+- **State Update:** Mark `steps.step_2_brand_kit.status = "completed"`.
+
+### Step 3: Instagram & Meta Professional Setup (`Hybrid: Agent Prepares, User Links`)
+- **Agent Automation:**
+  Hard-lock Instagram rules in `config/editing_rules.json`: `max_hashtags: 5`, `default_ig_location: "Miami, Florida"`, DM-share trigger at line 1, and 1080×1920 60fps universal safe zones.
+- **User Checklist:** Hand the user ONLY the manual actions:
+  1. Open Instagram on mobile or browser → Settings → **Switch to Professional Account (Creator)**.
+  2. Ensure account is **Public** and **Likes/View Count Visible** is ON.
+  3. Open `facebook.com` on your existing personal FB account → Create/open a Facebook Page → Page Settings → **Linked Accounts → Connect Instagram** (critical for Zernio Reel scheduling).
+  4. Paste the channel name, handle, and bio from `config/brand_kit.md`.
+- **Wait Condition:** Wait for user to reply *"Instagram linked"* or *"Done"*, then mark `steps.step_3_instagram_meta.status = "completed"`.
+
+### Step 4: YouTube Channel Setup (`Hybrid: Agent Prepares, User Toggles`)
+- **Agent Automation:**
+  Hard-lock YouTube compliance in upload pipeline: `made_for_kids: false`, `comments_enabled: true`, `privacy: "public"`, and `≤65 char curiosity title + #Shorts`.
+- **User Checklist:** Hand the user ONLY the manual actions in YouTube Studio (`studio.youtube.com`):
+  1. Apply channel name, handle, and bio from `config/brand_kit.md`.
+  2. In **Settings → Channel → Basic Info**: Set Country of Residence to **United States** (essential for Tier-1 algorithmic discovery and payouts). Paste channel keywords.
+  3. In **Settings → Channel → Feature Eligibility**: Verify phone number to unlock custom thumbnails and 10+ daily Shorts uploads.
+  4. In **Settings → Upload Defaults → Advanced**: Set Category to **Gaming**, Language to **English**, and Comments to **Allow all**.
+- **Wait Condition:** Wait for user to reply *"YouTube ready"* or *"Done"*, then mark `steps.step_4_youtube_channel.status = "completed"`.
+
+### Step 5: Zernio Multi-Platform API Connection (`Agent Auto-Discovers Everything`)
+- **User Action:**
+  Ask the user ONLY to sign up at `zernio.com` (free tier: 2 social accounts), connect their Instagram and YouTube channels via OAuth, and paste their `ZERNIO_API_KEY`.
+- **Agent Automation:**
+  1. Write `ZERNIO_API_KEY` to `.env`.
+  2. Run `client.discover_and_save_accounts()` or `python main.py --verify-zernio`.
+  3. Auto-discover both `accountId`s, verify active status, and write `config/zernio_accounts.json`.
+  4. Confirm connection: *"Successfully connected Instagram (@...) and YouTube (@...) via Zernio!"*
+- **State Update:** Mark `steps.step_5_zernio_connection.status = "completed"`.
+
+### Step 6: Whop Campaign Preset, Watched Streamers & Schedule (`Strict No-Bot Boundary`)
+- **Strict Anti-Bot Rule:** **NEVER automate, scrape, or log into Whop directly** (protects user from anti-bot bans).
+- **User Action:** Give the user a 3-line guide:
+  1. Sign into `contentrewards.com/c/discover` and connect your Instagram & YouTube in Settings.
+  2. Join your desired GTA 6 campaign.
+  3. Paste the **campaign brief text** into chat, drop any required campaign logo PNG into `assets/`, provide optional favorite streamer channels to watch, and state your timezone & awake hours (default: Asia/Kolkata, 14:00–22:00 IST).
+- **Agent Automation:**
+  1. Parse the brief into `config/active_campaign.json` AND save as a reusable preset in `config/presets/<slug>.json` via `campaign_manager.save_campaign_preset()`.
+  2. Populate `config/watched_streamers.json` with approved channel URLs.
+  3. Generate `config/schedule_config.json` with 5 awake-hour slots mapped cleanly to ISO 8601 UTC.
+- **State Update:** Mark `steps.step_6_campaign_and_schedule.status = "completed"`.
+
+---
+
+## 2. Phase B — Optional Enhancements (Menu — User Can Enable or Skip)
+
+After Phase A completes, present this clean menu:
+*"Phase A Core Setup is complete! Would you like to configure any of these optional upgrades now, or type 'skip' to jump straight to pre-flight health check?"*
+
+1. **Both-Live Telegram Mobile Notifier (Recommended):**
+   - If user says yes: prompt for `TELEGRAM_BOT_TOKEN` (via `@BotFather`) and `TELEGRAM_CHAT_ID` (via `@userinfobot`), write to `.env`, test ping with `python scripts/telegram_notifier.py --test`, and set `optional_telegram.status = "completed"`.
+2. **Cloudflare Media Hosting & Webhooks (Advanced Optional):**
+   - For users needing Cloudflare R2 public URLs or Worker webhook relays. If skipped, mark `optional_cloudflare.status = "skipped"`.
+3. **Optional Companion Skills (Suggested Only):**
+   - Suggest `earshot` (CPU-only offline sound design/whooshes) and `continuous-learning-v2` (cross-session instinct learning). Never force-install.
+
+---
+
+## 3. Phase C — Pre-Flight Health Check (`scripts/health_check.py`)
+
+- **Agent Action:** Run `python scripts/health_check.py`.
+- **Verification:** Audits binaries, dependencies, folders, presets, schedule, editing rules, and Zernio connection.
+- **Completion:** Sets `setup_complete: true` in `state/onboarding_state.json`.
+- **Guide Delivery Rule:** **Present `GUIDE.md` ONLY NOW** after Phase C passes. Never dump the operational guide before setup is finished.
+- **Final Prompt:**
+  *"🎉 Setup complete and verified 100%! Run 'check new streams' to discover fresh VODs, or paste a YouTube livestream link to start clipping."*
+
+---
+
+## 4. Operational Chat Commands Reference
 
 | User Chat Intent | Action Executed | Behind-the-Scenes Command |
 |---|---|---|
-| **Paste YouTube URL** | Runs Stage 1 Plan & Queue, auto-ranks candidates, then executes the atomic 1-clip loop | `python main.py <URL>` |
-| `"update campaign"` | Prompts for new brief text, extracts rules, and locks them into `config/active_campaign.json` | `python scripts/campaign_manager.py` |
-| `"update schedule"` | Prompts for new IST awake slots or daily posting cap and updates `config/schedule_config.json` | `python main.py --show-schedule` |
-| `"fetch live URLs"` | Checks Zernio for published posts, updates `logs/published_clips.json`, and displays clean Whop submission links | `python main.py --fetch-urls` |
-| `"mark submitted"` | Marks newly live clips as `whop_submitted: true` so they never clutter future Whop submission lists | `python main.py --mark-submitted` |
-| `"learn from analytics"` | Runs closed-loop Viral Learning Engine across live Zernio metrics, updates Viral DNA weights & learned rules | `python main.py --learn-analytics` |
-| `"clone winners"` | Analyzes top performing clips and prints actionable Viral DNA clone blueprint for the next batch | `python main.py --clone-winners` |
-| `"resume queue"` | Resumes pending clips from interrupted runs | `python main.py --resume` |
+| **`"check new streams"`** | Scans watched channels with `vod_watcher.py` and ranks fresh unclipped streams | `python main.py --check-streams` |
+| **Paste YouTube URL** *(or `"clip #1"`)* | Plans, auto-ranks candidates, and starts atomic 1-clip execution | `python main.py <URL_OR_#>` |
+| **`"update campaign"`** | Parses new Whop brief, saves active campaign + reusable preset in `config/presets/` | `python scripts/campaign_manager.py` |
+| **`"switch campaign"`** | Lists saved presets and switches active campaign instantly | `python main.py --switch-campaign` |
+| **`"update schedule"`** | Modifies daily posting slots or daily cap in `config/schedule_config.json` | `python main.py --show-schedule` |
+| **`"fetch live URLs"`** | Checks Zernio for published posts and displays clean Whop submission links | `python main.py --fetch-urls` |
+| **`"mark submitted"`** | Flags newly live links as submitted so they don't reappear in future lists | `python main.py --mark-submitted` |
+| **`"learn from analytics"`** | Pulls 24h/48h/72h Zernio metrics, upgrades Viral DNA weights, and rewrites learned rules | `python main.py --learn-analytics` |
+| **`"clone winners"`** | Outputs top 3 winning clips and a Viral DNA clone blueprint for the next batch | `python main.py --clone-winners` |
+| **`"health check"`** | Runs non-destructive diagnostic check on all tools, configs, and APIs | `python main.py --health-check` |
+| **`"setup optional tools"`** | Reruns Phase B menu to configure Telegram, Cloudflare, or extra skills | Custom prompt |
 
 ---
 
-## 2. Anti-Hallucination Architecture (1-Clip-at-a-Time Loop)
+## 5. Anti-Hallucination Execution Loop (Stage 2)
 
-Lightweight models (like Gemini Flash) risk context drift or hallucination if tasked with batch-processing multi-hour streams simultaneously. SaimGTA6Clipping enforces strict architectural isolation:
-
-1. **Stage 1 (Plan & Queue Only):**
-   - Fetches video metadata and YouTube Most Replayed heatmap without downloading the multi-hour VOD.
-   - Calculates deterministic `predicted_viral_score` (0–100) using base score, archetype weights, duration bucket, streamer source, and heatmap spike bonus.
-   - Sorts candidates highest-score-first in `state/job_queue.json`, reserving an 80% proven / 20% A/B test split.
-   - Assigns collision-free awake IST slots (Asia/Kolkata mapped to ISO 8601 UTC).
-
-2. **Stage 2 (Atomic 1-by-1 Stop-and-Approve Execution):**
-   - **Download:** Downloads ONLY that 1 clip's timestamp window (~25s) into `temp/` via `yt-dlp --download-sections`. Disk usage never exceeds 150 MB.
-   - **Visual Enhancement:** Renders 1080×1920 60fps vertical MP4:
-     * 35/65 stacked facecam/gameplay split or blurred background fill (zero black bars).
-     * 2.5s opening hook banner in universal safe zone (`y = 290px` or `y = 360px` with logo).
-     * Word-by-word `#FFE600` yellow pop ASS captions (`y = 1150–1320px`).
-     * -14 LUFS loudnorm audio normalization with silence trimming.
-     * Dynamic campaign watermark overlay preserving exact 3:1 aspect ratio for 100% duration with zero banner overlap.
-   - **Hard ffprobe Gate:** Asserts 1080×1920, valid audio & video streams, duration within 12–55s.
-   - **Compliance Gate:** Enforces title ≤ 65 chars (+ `#Shorts`), max 5 hashtags, and mandatory campaign tags.
-   - **Schedule & Cleanup:** Uploads to Zernio API v1 via direct presigned URL, records `post_id`, purges temporary segment from disk, and advances to the next clip.
-
----
-
-## 3. Fixed Awake-Hour Schedule (Asia/Kolkata -> UTC)
-
-Guarantees **zero overnight posts** and hits peak Tier-1 Western discovery windows:
-- **Daily Slots:** `14:00`, `16:00`, `18:00`, `20:00`, `22:00` IST (2:00 PM, 4:00 PM, 6:00 PM, 8:00 PM, 10:00 PM)
-- **UTC Conversion for Zernio:**
-  - `14:00 IST` → `08:30:00Z` (UK/EU morning wake-up)
-  - `16:00 IST` → `10:30:00Z` (US East Coast wake-up)
-  - `18:00 IST` → `12:30:00Z` (US East Coast morning commute)
-  - `20:00 IST` → `14:30:00Z` (US East Coast mid-morning peak)
-  - `22:00 IST` → `16:30:00Z` (US lunch & West Coast wake-up)
-- **Automatic Rollover:** Once 5 slots for the day are filled, automatically assigns slots starting tomorrow at 14:00 IST.
-
----
-
-## 4. Self-Optimizing Viral Learning Engine
-
-Run periodically or on command (`python main.py --learn-analytics`):
-- Pulls live views, likes, comments, shares, average watch time, and Reels skip rates from Zernio Analytics API.
-- Settled 24h / 48h / 72h snapshot tracking + 6h early warning flags.
-- Quantifies Viral DNA into `memory/viral_dna_weights.json` (archetypes, duration sweet spots, hook formulas, IST slots, streamer source weights).
-- Rewrites concise `memory/learned_rules.md` strictly capped at ≤ 40 lines.
-- Alerts on 3,000-view payout milestones and warns on zero-view anomalies.
-
----
-
-## 5. Optional Global Skill Integrations
-
-SaimGTA6Clipping is fully modular and integrates cleanly with companion skills if installed:
-- **`earshot` (Offline SFX / Foley):** If available, can add subtle gameplay riser whooshes or impact stingers to opening hooks during the `viral_enhancer` pipeline.
-- **`continuous-learning-v2`:** If present in the parent environment, hooks into runtime observation events to log persistent cross-session heuristics into `.gemini/` or local memory.
+During clipping execution, the agent must enforce the **strict 1-clip-at-a-time stop-and-approve loop**:
+1. Download small ~25s window into `temp/`.
+2. Render 1080×1920 60fps vertical format with 35/65 split, hook banner, and `#FFE600` captions.
+3. Validate with hard `ffprobe` and Python compliance gate.
+4. Schedule to Instagram + YouTube via Zernio.
+5. Purge temporary raw segment.
+6. Report clip completion and ask user for confirmation before moving to the next clip in queue.

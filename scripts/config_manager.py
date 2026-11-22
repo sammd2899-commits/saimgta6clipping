@@ -18,6 +18,7 @@ if str(_SCRIPTS_DIR) not in sys.path:
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 CONFIG_DIR = BASE_DIR / "config"
+PRESETS_DIR = CONFIG_DIR / "presets"
 SCRIPTS_DIR = BASE_DIR / "scripts"
 STATE_DIR = BASE_DIR / "state"
 MEMORY_DIR = BASE_DIR / "memory"
@@ -29,6 +30,7 @@ ASSETS_DIR = BASE_DIR / "assets"
 ENV_PATH = BASE_DIR / ".env"
 CAMPAIGN_PATH = CONFIG_DIR / "active_campaign.json"
 ACCOUNTS_PATH = CONFIG_DIR / "zernio_accounts.json"
+WATCHED_STREAMERS_PATH = CONFIG_DIR / "watched_streamers.json"
 QUEUE_PATH = STATE_DIR / "job_queue.json"
 LEARNED_RULES_PATH = MEMORY_DIR / "learned_rules.md"
 PERF_LOG_PATH = MEMORY_DIR / "performance_log.json"

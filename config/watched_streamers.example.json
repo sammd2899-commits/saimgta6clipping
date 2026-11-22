@@ -1,0 +1,34 @@
+{
+  "description": "Approved streamer channel URLs watched for fresh livestreams and VODs.",
+  "streamers": [
+    {
+      "name": "Typical Gamer",
+      "platform": "youtube",
+      "url": "https://www.youtube.com/@typicalgamer/streams",
+      "niche": "GTA 6 / Open World",
+      "priority_weight": 1.5,
+      "notes": "High view velocity and proven viral retention"
+    },
+    {
+      "name": "KreekCraft",
+      "platform": "youtube",
+      "url": "https://www.youtube.com/@KreekCraft/streams",
+      "niche": "GTA 6 / Gaming Chaos",
+      "priority_weight": 1.4,
+      "notes": "High energy commentary, reaction faces, and glitch discoveries"
+    },
+    {
+      "name": "The Boys Gaming",
+      "platform": "youtube",
+      "url": "https://www.youtube.com/@TheBoysGaming/streams",
+      "niche": "GTA 6 / Multiplayer",
+      "priority_weight": 1.2,
+      "notes": "Multiplayer heist chaos and high-speed pursuits"
+    }
+  ],
+  "scan_settings": {
+    "max_streams_per_channel": 3,
+    "max_vod_age_days": 7,
+    "auto_check_reminder_hours": 24
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "version": "3.0.0",
+  "current_phase": "PHASE_A",
+  "current_step": "step_1_bootstrap",
+  "setup_complete": false,
+  "completed_steps": [],
+  "steps": {
+    "step_1_bootstrap": {
+      "title": "Auto-Install Tools & Workspace",
+      "status": "pending",
+      "automated": true,
+      "completed_at": null
+    },
+    "step_2_brand_kit": {
+      "title": "Brand & Channel Kit Generation",
+      "status": "pending",
+      "automated": true,
+      "completed_at": null
+    },
+    "step_3_instagram_meta": {
+      "title": "Instagram & Meta Professional Setup",
+      "status": "pending",
+      "automated": false,
+      "completed_at": null
+    },
+    "step_4_youtube_channel": {
+      "title": "YouTube Channel Setup",
+      "status": "pending",
+      "automated": false,
+      "completed_at": null
+    },
+    "step_5_zernio_connection": {
+      "title": "Zernio Multi-Platform API Connection",
+      "status": "pending",
+      "automated": true,
+      "completed_at": null
+    },
+    "step_6_campaign_and_schedule": {
+      "title": "Whop Campaign Preset, Watched Streamers & Schedule",
+      "status": "pending",
+      "automated": true,
+      "completed_at": null
+    },
+    "optional_telegram": {
+      "title": "Both-Live Telegram Mobile Notifier",
+      "status": "skipped",
+      "automated": false,
+      "completed_at": null
+    },
+    "optional_cloudflare": {
+      "title": "Cloudflare R2 Media Hosting & Worker Webhooks",
+      "status": "skipped",
+      "automated": false,
+      "completed_at": null
+    },
+    "optional_mcps": {
+      "title": "Optional Direct MCP Integrations",
+      "status": "skipped",
+      "automated": false,
+      "completed_at": null
+    },
+    "phase_c_health_check": {
+      "title": "Pre-Flight System Health Check",
+      "status": "pending",
+      "automated": true,
+      "completed_at": null
+    }
+  },
+  "user_profile": {
+    "niche": "GTA 6 / Gaming",
+    "brand_name": null,
+    "handles": {
+      "instagram": null,
+      "youtube": null
+    },
+    "timezone": "Asia/Kolkata",
+    "awake_hours_ist": [
+      "14:00",
+      "16:00",
+      "18:00",
+      "20:00",
+      "22:00"
+    ]
+  },
+  "last_updated": null
+}
