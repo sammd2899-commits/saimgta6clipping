@@ -1,6 +1,14 @@
 """SaimGTA6Clipping — High-Retention GTA 6 Stream Clipping & Scheduled Auto-Posting.
 
-Main CLI Entry Point.
+Master CLI Entry Point for Autonomous & Chat-Directed Execution.
+
+Features:
+- Stage 1: Plan & Queue (state/job_queue.json) with Deterministic Viral Ranking
+- Stage 2: Atomic 1-by-1 Processing Loop with Hard ffprobe Verification
+- Multi-Platform Auto-Posting (Zernio API v1) with Fixed Awake IST Scheduling (Asia/Kolkata -> UTC)
+- Whop Content Rewards Submission Helper (live URLs tracking & mark-as-submitted)
+- Closed-Loop Viral Learning Engine & Winner Clone Blueprint (--learn-analytics, --clone-winners)
+- Dynamic Campaign Brief Manager & Continuous Learning Memory (memory/learned_rules.md)
 """
 
 import argparse
@@ -13,7 +21,6 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 from analyzer import plan_and_queue
-from bootstrap import run_bootstrap
 from campaign_manager import show_active_campaign, update_campaign_from_dict
 from config_manager import (
     append_learned_rule,
@@ -24,7 +31,12 @@ from config_manager import (
 )
 from fetch_live_urls import fetch_live_urls, mark_as_whop_submitted
 from pipeline import run_pipeline
-from scheduler import get_next_available_slots, load_schedule_config, print_schedule_table
+from scheduler import (
+    get_next_available_slots,
+    load_schedule_config,
+    print_schedule_table,
+    update_schedule_interactively,
+)
 from zernio_client import ZernioClient
 
 
@@ -48,40 +60,41 @@ def show_queue():
     for c in clips:
         st = c.get("status", "PENDING")
         cid = c.get("clip_id")
+        score = f" [Score: {c.get('predicted_viral_score', 0):.1f}]" if "predicted_viral_score" in c else ""
+        ab = " [A/B Test]" if c.get("ab_test") else ""
         window = f"{c.get('start_time')}s-{c.get('end_time')}s"
         sched = f" -> Sched: {c.get('scheduled_for')}" if c.get("scheduled_for") else ""
-        print(f"  [{st:<9}] Clip #{cid:<2} ({window}) | Hook: {c.get('hook')[:40]}...{sched}")
+        print(f"  [{st:<9}] Clip #{cid:<2} ({window}){score}{ab} | Hook: {c.get('hook')[:35]}...{sched}")
     print("=" * 70)
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="SaimGTA6Clipping — High-Retention GTA 6 Stream Clipper & Multi-Platform Auto-Poster",
+        description="SaimGTA6Clipping — Autonomous GTA 6 Stream Clipping & Scheduled Auto-Posting Studio",
     )
     parser.add_argument("url", nargs="?", help="YouTube video or livestream URL to clip & post")
-    parser.add_argument("--bootstrap", action="store_true", help="Run automated environment and tool setup")
     parser.add_argument("--resume", action="store_true", help="Resume pending clips from state/job_queue.json")
     parser.add_argument("--plan-only", action="store_true", help="Run Stage 1 only (create job_queue.json without downloading)")
-    parser.add_argument("--max-clips", type=int, default=None, help="Maximum number of clips to extract")
+    parser.add_argument("--max-clips", type=int, default=None, help="Maximum number of clips to extract (12-30 default)")
     parser.add_argument("--fetch-urls", action="store_true", help="Fetch live post URLs from Zernio for Whop submission")
     parser.add_argument("--mark-submitted", action="store_true", help="Mark newly live clips as whop_submitted: true")
     parser.add_argument("--show-queue", action="store_true", help="Display current job queue status")
     parser.add_argument("--learn", type=str, help="Append a learned rule/preference to memory/learned_rules.md")
     parser.add_argument("--show-rules", action="store_true", help="Display learned rules memory")
+    parser.add_argument("--learn-analytics", action="store_true", help="Run closed-loop Viral Learning Engine on live Zernio metrics")
+    parser.add_argument("--clone-winners", action="store_true", help="Display top winning clips and Viral DNA clone blueprint")
     parser.add_argument("--verify-zernio", action="store_true", help="Test Zernio API connection and refresh account cache")
     parser.add_argument("--show-campaign", action="store_true", help="Display current active campaign rules")
-    parser.add_argument("--show-schedule", action="store_true", help="Display current awake schedule & next slots")
+    parser.add_argument("--update-campaign", action="store_true", help="Update active campaign brief")
+    parser.add_argument("--show-schedule", action="store_true", help="Display current IST awake schedule & next slots")
+    parser.add_argument("--update-schedule", action="store_true", help="Update IST slots or daily cap")
 
     args = parser.parse_args()
-
-    if args.bootstrap:
-        run_bootstrap()
-        return
 
     if args.verify_zernio:
         client = ZernioClient()
         accs = client.discover_and_save_accounts()
-        print("\n✅ Zernio verification successful. Accounts synced.")
+        print("\n✅ Zernio verification successful. Connected accounts are active and ready for posting.")
         return
 
     if args.show_campaign:
@@ -90,22 +103,53 @@ def main():
 
     if args.show_schedule:
         cfg = load_schedule_config()
-        print(f"Timezone: {cfg.get('timezone')} (UTC offset: +{cfg.get('utc_offset_hours')}h)")
+        print("=" * 80)
+        print("FIXED AWAKE-HOUR SCHEDULE CONFIG (config/schedule_config.json)")
+        print("=" * 80)
+        print(f"Timezone:         {cfg.get('timezone')} (UTC+05:30)")
+        print(f"Daily Slots (IST): {', '.join(cfg.get('daily_slots_ist', []))}")
+        print(f"Daily Cap:        {cfg.get('max_clips_per_day')} clips/day")
+        print(f"Notes:            {cfg.get('notes')}")
         slots = get_next_available_slots(10)
         print_schedule_table(slots)
         return
 
-    if args.show_rules:
-        print(load_learned_rules())
+    if args.update_schedule:
+        print("\n=== UPDATE SCHEDULE ===")
+        print("Provide new slots or daily cap via scheduler.update_schedule_interactively().")
         return
 
-    if args.learn:
-        append_learned_rule("User Directive", args.learn)
-        print(f"Logged new rule to memory/learned_rules.md: {args.learn}")
+    if args.update_campaign:
+        print("\n=== UPDATE CAMPAIGN BRIEF ===")
+        print("Provide updated rules or paste new brief via campaign_manager.update_campaign_from_dict().")
         return
 
     if args.show_queue:
         show_queue()
+        return
+
+    if args.show_rules:
+        rules = load_learned_rules()
+        print("=" * 70)
+        print("CONTINUOUS LEARNING MEMORY (memory/learned_rules.md)")
+        print("=" * 70)
+        print(rules)
+        print("=" * 70)
+        return
+
+    if args.learn_analytics:
+        from viral_learner import main as run_learner
+        run_learner()
+        return
+
+    if args.clone_winners:
+        from viral_learner import ViralLearner
+        print(ViralLearner().clone_winners_report())
+        return
+
+    if args.learn:
+        append_learned_rule("User Directive", args.learn)
+        print("✅ Rule updated and locked into continuous learning memory.")
         return
 
     if args.fetch_urls:
@@ -116,18 +160,26 @@ def main():
         mark_as_whop_submitted()
         return
 
-    if args.url:
-        if args.plan_only:
-            plan_and_queue(args.url, target_count=args.max_clips)
-        else:
-            run_pipeline(args.url, max_clips=args.max_clips, resume_only=args.resume)
+    if args.plan_only:
+        if not args.url:
+            print("Error: --plan-only requires a YouTube URL.")
+            sys.exit(1)
+        plan_and_queue(args.url, target_count=args.max_clips)
+        show_queue()
         return
 
     if args.resume:
-        run_pipeline(youtube_url=None, resume_only=True)
+        queue = load_job_queue()
+        if not queue.get("source_url"):
+            print("Error: No existing job queue found to resume.")
+            sys.exit(1)
+        run_pipeline(queue["source_url"], resume_only=True)
         return
 
-    parser.print_help()
+    if args.url:
+        run_pipeline(args.url, max_clips=args.max_clips)
+    else:
+        parser.print_help()
 
 
 if __name__ == "__main__":

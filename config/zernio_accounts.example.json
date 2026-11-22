@@ -1,14 +1,24 @@
 {
-  "instagram": {
-    "account_id": "acc_instagram_placeholder",
-    "name": "Your Instagram Account",
-    "platform": "instagram"
-  },
-  "youtube": {
-    "account_id": "acc_youtube_placeholder",
-    "name": "Your YouTube Channel",
-    "platform": "youtube"
-  },
-  "discovered_at": null,
-  "notes": "Run 'python scripts/bootstrap.py' or 'python main.py --verify-zernio' with your ZERNIO_API_KEY to auto-populate"
+  "accounts": [
+    {
+      "accountId": "your_youtube_account_id_here",
+      "platform": "youtube",
+      "username": "your_youtube_handle",
+      "displayName": "Your YouTube Channel",
+      "profileUrl": "https://www.youtube.com/@your_channel",
+      "isActive": true,
+      "platformStatus": "active"
+    },
+    {
+      "accountId": "your_instagram_account_id_here",
+      "platform": "instagram",
+      "username": "your_instagram_handle",
+      "displayName": "Your Instagram Profile",
+      "profileUrl": "https://www.instagram.com/your_profile",
+      "isActive": true,
+      "platformStatus": "active"
+    }
+  ],
+  "verified_at": null,
+  "notes": "Run 'python main.py --verify-zernio' with your ZERNIO_API_KEY in .env to automatically discover and sync your connected accounts."
 }

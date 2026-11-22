@@ -1,115 +1,135 @@
 {
+  "permanent_defaults": {
+    "default_ig_location": "Miami, Florida",
+    "youtube_made_for_kids": false,
+    "youtube_comments_enabled": true,
+    "instagram_comments_enabled": true,
+    "dm_share_hook_position": "top_of_caption",
+    "default_dm_share_trigger": "Send this to your GTA duo 😭👇",
+    "notes": "Permanent global defaults applied to every future clip and campaign unless explicitly overridden."
+  },
   "video": {
     "width": 1080,
     "height": 1920,
-    "fps": 60,
-    "codec": "libx264",
-    "bitrate": "6M",
-    "target_duration_sec": [18, 38],
-    "hard_duration_bounds_sec": [12, 55],
-    "trim_silence_over_sec": 0.6,
+    "fps": 60.0,
+    "video_bitrate": "6M",
+    "vcodec": "libx264",
+    "pix_fmt": "yuv420p",
     "audio_loudnorm_lufs": -14,
-    "external_watermarks_allowed": false
+    "trim_silence_over_sec": 0.6,
+    "target_duration_sec": [18, 38],
+    "hard_duration_bounds": [12, 55]
   },
   "layout": {
     "mode": "stacked_split_screen",
+    "facecam_crop": "430:277:12:428",
     "facecam_top_ratio": 0.35,
     "facecam_height_px": 672,
     "gameplay_bottom_ratio": 0.65,
     "gameplay_height_px": 1248,
-    "fallback_if_no_facecam": "full_bleed_with_blurred_vertical_fill",
-    "reaction_peak_zoom_percent": 108
+    "fallback_mode": "blurred_fill"
   },
-  "safe_zones_px": {
-    "top_dead_zone": 250,
-    "bottom_dead_zone": 430,
-    "right_dead_zone": 140,
-    "left_margin": 60,
-    "universal_safe_box": "890x1250"
+  "safe_zones": {
+    "universal_safe_box": {
+      "x": [60, 940],
+      "y": [250, 1490],
+      "width": 890,
+      "height": 1250,
+      "description": "Zero text, faces, or key HUD elements covered by Instagram Reels or YouTube Shorts UI overlays"
+    },
+    "dead_zones": {
+      "top_bar": {
+        "y": [0, 250],
+        "reason": "Covered by search, back, sound, and brand camera notches"
+      },
+      "bottom_bar": {
+        "y": [1490, 1920],
+        "height_px": 430,
+        "reason": "Covered by username, follow button, caption, and audio title"
+      },
+      "right_rail": {
+        "x": [940, 1080],
+        "width_px": 140,
+        "reason": "Covered by like, comment, share, remix, and bookmark action buttons"
+      }
+    }
   },
   "hook_banner": {
-    "enabled": true,
+    "position_y": 290,
     "duration_sec": 2.5,
-    "y_position_px": 290,
-    "max_words": 7,
+    "word_count_range": [4, 7],
     "font_size_px": 56,
-    "style": "bold_white_text_thick_black_outline_or_dark_pill",
-    "viral_templates": [
-      "This looks normal, until the end...",
-      "Wait until you see what this NPC does",
-      "He didn't see what was behind him",
-      "Bro really tried escaping cops on THIS",
-      "GTA 6 NPCs are actually terrifying...",
-      "Instant karma in under 2 seconds",
-      "Nobody expected Rockstar to add THIS",
-      "Worst getaway driver in Vice City",
-      "Watch the police AI at 0:08",
-      "He stole a fighter jet and regretted it"
-    ],
-    "power_words": [
-      "Wait",
-      "Nobody",
-      "Actually",
-      "Instant",
-      "Secret",
-      "Terrifying",
-      "Impossible",
-      "Broke",
-      "Wrong",
-      "First time"
-    ]
+    "text_color": "#FFFFFF",
+    "bg_color": "#0E0E12EE",
+    "border_color": "#D4AF37",
+    "border_width_px": 3,
+    "corner_radius_px": 24,
+    "padding_px": [28, 48]
   },
   "captions": {
-    "engine": "whisper_word_timestamps_ass",
-    "font_primary": "Montserrat ExtraBold",
-    "font_fallback": "Anton",
+    "font_name": "Montserrat",
+    "font_fallback": "Arial Bold",
     "font_size_px": 68,
-    "words_per_chunk": [2, 4],
-    "y_range_px": [1150, 1320],
-    "text_color": "#FFFFFF",
+    "active_word_color": "#FFE600",
+    "inactive_word_color": "#FFFFFF",
     "outline_color": "#000000",
-    "outline_px": 5,
-    "active_word_highlight": "#FFE600",
-    "alternate_highlight": "#00E5FF"
+    "outline_width_px": 5,
+    "y_position_range": [1150, 1320],
+    "margin_v_from_bottom": 650,
+    "alignment": 2,
+    "words_per_chunk": [2, 4],
+    "animation": "word_by_word_pop"
   },
-  "viral_moment_selection": {
-    "core_rule": "one_single_idea_per_clip_open_immediately_on_chaos",
-    "prioritize": [
+  "watermark": {
+    "position": "upper_right_safe",
+    "x": 810,
+    "y": 260,
+    "width": 210,
+    "height": 70,
+    "aspect_ratio": "3:1",
+    "duration": "100%",
+    "preserve_aspect_ratio": true,
+    "allow_crop_or_stretch": false,
+    "zero_overlap_with_hook_banner": true
+  },
+  "content_filters": {
+    "skip_story_cutscenes": true,
+    "skip_licensed_music_audio": true,
+    "skip_nsfw_scenes": true,
+    "skip_silent_driving": true,
+    "prioritize_themes": [
       "smart_or_creepy_npc_ai_reactions",
       "absurd_vehicle_or_police_escape_chaos",
-      "shocking_crash_physics_ragdoll_and_glitches",
+      "shocking_crash_physics_or_glitches",
       "hidden_map_easter_eggs_and_high_risk_stunts",
       "instant_karma_heist_fails_and_chat_trolling"
-    ],
-    "strictly_skip": [
-      "isolated_story_cutscenes_and_endings_copyright_risk",
-      "loud_licensed_in_game_radio_songs_content_id_risk",
-      "nsfw_strip_club_or_shower_scenes_shadowban_risk",
-      "silent_driving_or_slow_buildup"
     ]
   },
   "platform_metadata": {
+    "default_ig_location": "Miami, Florida",
+    "youtube_made_for_kids": false,
+    "youtube_comments_enabled": true,
+    "instagram_comments_enabled": true,
+    "dm_share_hook_position": "top_of_caption",
     "instagram_reels": {
+      "default_ig_location": "Miami, Florida",
+      "comments_enabled": true,
       "max_hashtags": 5,
-      "required_campaign_tags": [
-        "#GTA6",
-        "#GrandTheftAutoVI"
-      ],
-      "extra_tags_max_2": [
-        "#GTAVI",
-        "#GamingClips"
-      ],
+      "required_campaign_tags": ["#GTA6", "#GTAVI"],
+      "extra_tags_max_2": ["#GTA6Clips", "#GamingClips", "#GrandTheftAutoVI"],
       "dm_share_triggers": [
-        "Send this to your GTA duo 😭",
-        "Tag the friend who drives like this",
+        "Send this to your GTA duo 😭👇",
+        "Tag the friend who drives like this 😭👇",
         "Would you survive this chase? 👇",
-        "Rate this escape 1–10 💀"
+        "Rate this escape 1–10 💀👇"
       ],
       "mandatory_credit": "Watch the official livestream creator",
       "mandatory_channel_tag": "@Creator",
       "cover_frame": "1080x1920 centered reaction frame (1:1 profile grid safe)"
     },
     "youtube_shorts": {
+      "made_for_kids": false,
+      "comments_enabled": true,
       "title_max_chars": 65,
       "title_style": "curiosity_gap_english_plus_#Shorts",
       "category": "Gaming",
@@ -117,11 +137,7 @@
       "likes_visible": true,
       "mandatory_credit_in_description": "Watch the official livestream creator",
       "mandatory_channel_tag": "@Creator",
-      "description_tags": [
-        "#GTA6",
-        "#GrandTheftAutoVI",
-        "#Shorts"
-      ]
+      "description_tags": ["#GTA6", "#GTAVI", "#Shorts"]
     }
   }
 }

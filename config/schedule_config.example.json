@@ -10,6 +10,33 @@
   ],
   "max_clips_per_day": 5,
   "min_lead_minutes": 15,
-  "notes": "Awake-hour schedule (14:00, 16:00, 18:00, 20:00, 22:00 IST / customizable)",
-  "updated_at": "2026-11-21T00:00:00Z"
+  "tier1_peak_slot_examples": [
+    {
+      "slot_ist": "14:30",
+      "utc": "09:00:00Z",
+      "tier1_audience_context": "UK / EU morning waking hours"
+    },
+    {
+      "slot_ist": "16:30",
+      "utc": "11:00:00Z",
+      "tier1_audience_context": "US East Coast morning wake-up (06:00-07:00 AM EST)"
+    },
+    {
+      "slot_ist": "18:00",
+      "utc": "12:30:00Z",
+      "tier1_audience_context": "US East Coast morning commute (07:30-08:30 AM EST)"
+    },
+    {
+      "slot_ist": "20:00",
+      "utc": "14:30:00Z",
+      "tier1_audience_context": "US East Coast mid-morning & EU afternoon peak"
+    },
+    {
+      "slot_ist": "21:00",
+      "utc": "15:30:00Z",
+      "tier1_audience_context": "US East Coast lunchtime & West Coast morning wake-up"
+    }
+  ],
+  "notes": "Fixed awake-hour IST schedule (Asia/Kolkata -> UTC conversion). Guarantees zero overnight posts and hits peak Tier-1 Western discovery windows.",
+  "updated_at": "2026-11-23T00:00:00+05:30"
 }

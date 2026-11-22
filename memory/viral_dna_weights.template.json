@@ -1,0 +1,161 @@
+{
+  "last_updated": null,
+  "weights_source": "cold_start_baseline",
+  "settled_clips_count": 0,
+  "analyzed_count": 0,
+  "account_averages": {
+    "avg_views": 0.0,
+    "avg_engagement_rate": 0.0,
+    "avg_youtube_views": 0.0,
+    "avg_instagram_views": 0.0,
+    "total_analyzed": 0
+  },
+  "moment_archetypes": {
+    "vehicle_police_chase": {
+      "weight": 1.0,
+      "avg_views": 0.0,
+      "avg_engagement": 0.0,
+      "sample_size": 0,
+      "win_rate": 0.0,
+      "verdict": "BASELINE"
+    },
+    "npc_ai": {
+      "weight": 1.0,
+      "avg_views": 0.0,
+      "avg_engagement": 0.0,
+      "sample_size": 0,
+      "win_rate": 0.0,
+      "verdict": "BASELINE"
+    },
+    "crash_physics_glitch": {
+      "weight": 1.0,
+      "avg_views": 0.0,
+      "avg_engagement": 0.0,
+      "sample_size": 0,
+      "win_rate": 0.0,
+      "verdict": "BASELINE"
+    },
+    "easter_egg_stunt": {
+      "weight": 1.0,
+      "avg_views": 0.0,
+      "avg_engagement": 0.0,
+      "sample_size": 0,
+      "win_rate": 0.0,
+      "verdict": "BASELINE"
+    },
+    "instant_karma_fail": {
+      "weight": 1.0,
+      "avg_views": 0.0,
+      "avg_engagement": 0.0,
+      "sample_size": 0,
+      "win_rate": 0.0,
+      "verdict": "BASELINE"
+    }
+  },
+  "duration_sweet_spots": {
+    "18-24s": {
+      "weight": 1.0,
+      "avg_views": 0.0,
+      "avg_engagement": 0.0,
+      "sample_count": 0,
+      "verdict": "BASELINE"
+    },
+    "25-30s": {
+      "weight": 1.0,
+      "avg_views": 0.0,
+      "avg_engagement": 0.0,
+      "sample_count": 0,
+      "verdict": "BASELINE"
+    },
+    "31-38s": {
+      "weight": 1.0,
+      "avg_views": 0.0,
+      "avg_engagement": 0.0,
+      "sample_count": 0,
+      "verdict": "BASELINE"
+    },
+    "39-45s": {
+      "weight": 1.0,
+      "avg_views": 0.0,
+      "avg_engagement": 0.0,
+      "sample_count": 0,
+      "verdict": "BASELINE"
+    }
+  },
+  "hook_and_title_formulas": {
+    "formulas": {
+      "mystery_warning": {
+        "weight": 1.0,
+        "avg_views": 0.0,
+        "avg_engagement": 0.0,
+        "sample_size": 0,
+        "verdict": "BASELINE"
+      },
+      "discovery_secret": {
+        "weight": 1.0,
+        "avg_views": 0.0,
+        "avg_engagement": 0.0,
+        "sample_size": 0,
+        "verdict": "BASELINE"
+      },
+      "observation_alert": {
+        "weight": 1.0,
+        "avg_views": 0.0,
+        "avg_engagement": 0.0,
+        "sample_size": 0,
+        "verdict": "BASELINE"
+      },
+      "absurd_physics": {
+        "weight": 1.0,
+        "avg_views": 0.0,
+        "avg_engagement": 0.0,
+        "sample_size": 0,
+        "verdict": "BASELINE"
+      },
+      "curiosity_timestamp": {
+        "weight": 1.0,
+        "avg_views": 0.0,
+        "avg_engagement": 0.0,
+        "sample_size": 0,
+        "verdict": "BASELINE"
+      }
+    }
+  },
+  "streamer_source_weights": {},
+  "ist_slot_performance": {
+    "14:00 IST": {
+      "weight": 1.0,
+      "avg_views": 0.0,
+      "avg_engagement": 0.0,
+      "sample_count": 0
+    },
+    "16:00 IST": {
+      "weight": 1.0,
+      "avg_views": 0.0,
+      "avg_engagement": 0.0,
+      "sample_count": 0
+    },
+    "18:00 IST": {
+      "weight": 1.0,
+      "avg_views": 0.0,
+      "avg_engagement": 0.0,
+      "sample_count": 0
+    },
+    "20:00 IST": {
+      "weight": 1.0,
+      "avg_views": 0.0,
+      "avg_engagement": 0.0,
+      "sample_count": 0
+    },
+    "22:00 IST": {
+      "weight": 1.0,
+      "avg_views": 0.0,
+      "avg_engagement": 0.0,
+      "sample_count": 0
+    }
+  },
+  "hashtags_and_dm_triggers": {
+    "dm_triggers_ranked": [],
+    "extra_hashtags_ranked": []
+  }
+}

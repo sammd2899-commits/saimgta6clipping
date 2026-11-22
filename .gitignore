@@ -1,8 +1,12 @@
-# Environment and Secrets (CRITICAL)
+# Environment and Secrets (CRITICAL - NEVER COMMIT)
 .env
 *.env
 .env.*
 !.env.example
+
+# Backup files
+*.bak
+*.backup
 
 # Local Configuration overrides (only .example.json committed)
 config/zernio_accounts.json
@@ -10,6 +14,13 @@ config/active_campaign.json
 config/schedule_config.json
 !config/*.example.json
 !config/editing_rules.json
+
+# Local Memory & Continuous Learning Runtime State (only .template files committed)
+memory/performance_log.json
+memory/viral_dna_weights.json
+memory/learned_rules.md
+!memory/*.template.*
+!memory/*.template.json
 
 # Intermediate clip processing and raw media
 temp/
@@ -23,6 +34,12 @@ output/
 *.png
 *.wav
 *.ass
+
+# Campaign assets (logos/watermarks - only .gitkeep committed)
+assets/*.png
+assets/*.jpg
+assets/*.jpeg
+!assets/.gitkeep
 
 # User state and personal logs
 state/

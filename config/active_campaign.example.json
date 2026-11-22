@@ -1,15 +1,18 @@
 {
-  "campaign_name": "GTA 6 Clipping Campaign",
-  "allowed_source": "Official GTA 6 livestreams and gameplay replays",
-  "required_caption_text": "Watch the official creator on YouTube and Twitch",
+  "campaign_name": "GTA VI Clipping Campaign",
+  "allowed_source": "Any official GTA VI streamer gameplay ONLY (no reuploads with other creators' watermarks)",
+  "watermark_path": null,
+  "logo_rules": "If watermark_path is set (e.g., 'assets/campaign_logo.png'), keep visible for 100% of clip duration (0.0s to end). NEVER stretch, recolor, crop, or shrink it (preserve exact aspect ratio). NEVER cover it with captions, hook banner, facecam, or game HUD/minimap.",
   "required_hashtags": [
     "#GTA6",
-    "#GrandTheftAutoVI"
+    "#GTAVI",
+    "#YourCampaignTag"
   ],
+  "required_caption_text": "Watch the official livestream creator",
   "required_channel_tag": "@Creator",
-  "language": "English (optimized for Tier-1 audience: US, UK, Canada, Australia)",
-  "quality_rules": "Strong 1-2 second hook, original edit, dynamic word-pop captions, likes publicly visible, keep public for 30+ days, max 5 near-identical clips, NO low-effort raw screen recordings",
-  "safety_filters": "Skip isolated GTA 6 story cutscenes/endings (copyright strike risk) and skip loud licensed in-game radio songs (Content ID risk)",
-  "watermark_path": null,
-  "updated_at": "2026-11-21T00:00:00Z"
+  "min_post_retention_days": 60,
+  "tier1_only_payout": "US, UK, Canada, Australia ONLY (30%+ Tier-1 required on IG; 0.5%+ likes+comments engagement; 100% Western English copy, zero Hindi/Hinglish).",
+  "quality_rules": "Strong 1-2 second hook, original edit, dynamic word-pop captions, likes publicly visible, keep public for 30+ days, max 5 near-identical clips, NO low-effort raw screen recordings.",
+  "safety_filters": "Skip isolated GTA 6 story cutscenes/endings (copyright strike risk) and skip loud licensed in-game radio songs (Content ID risk).",
+  "updated_at": "2026-11-23T00:00:00+05:30"
 }
