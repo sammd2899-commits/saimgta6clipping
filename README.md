@@ -1,40 +1,62 @@
-# SaimGTA6Clipping (v3.0)
+# SaimGTA6Clipping (v4.0)
 
 > **Plug-and-Play, Autonomous GTA 6 Stream Clipping & Auto-Posting Studio.**  
-> Built for creators, agencies, and clipping studios with an anti-hallucination chunked state machine, smart priority onboarding wizard, campaign preset switcher, auto-VOD watcher, closed-loop analytics learning engine, and Whop Content Rewards compliance.
+> Built for creators, agencies, and clipping studios with a Dual-Mode architecture (Local Web App + AI Agent Skill), anti-hallucination chunked state machine, smart priority onboarding wizard, campaign preset switcher, auto-VOD watcher, closed-loop analytics learning engine, and Whop Content Rewards compliance.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Local%20Backend-009688.svg)](https://fastapi.tiangolo.com/)
 [![FFmpeg](https://img.shields.io/badge/FFmpeg-6.0%2B-green.svg)](https://ffmpeg.org/)
 [![BYOK](https://img.shields.io/badge/Setup-BYOK%20Ready-success.svg)](https://zernio.com)
 
 ---
 
-## ⚡ What Makes v3.0 Special?
+## 🎯 Choose Your Mode (Dual-Mode Architecture)
 
-1. **Priority-Ordered Resumable Onboarding Wizard (`SKILL.md`):**
+SaimGTA6Clipping v4.0 is fully dual-mode. Choose the interface that fits your workflow—both modes run on the exact same local Python engine, configs, presets, and state machine with 100% interoperability:
+
+| Feature / Capability | Mode 1: SaimClip Studio (Local Web App) | Mode 2: AI Agent Skill (CLI / Chat) |
+|---|---|---|
+| **Primary Interface** | Clean local browser UI (`http://127.0.0.1:8765`) | Natural language chat (Antigravity) or Terminal CLI (`main.py`) |
+| **How to Launch** | 1-Click `start_web.bat` (or `python server.py`) | Activate skill in chat or run `python main.py <URL>` |
+| **Node.js Required?** | **NO** — ships pre-compiled (`web/dist/`) | **NO** — 100% pure Python |
+| **Visual Clip Review** | Interactive 9:16 vertical video player with safe-zone overlay | Terminal ffprobe verification & candidate inspection |
+| **Stream Discovery** | Visual **Live Hunt** tab (one-click "Send to Create") | Chat command `"check new streams"` (`python main.py --check-streams`) |
+| **Campaign Switching** | Top-bar dropdown + Visual Presets view | Chat command `"switch campaign"` (`python main.py --switch-campaign`) |
+| **Whop Submissions** | Slide-over drawer with 30-min live countdown timers | Chat command `"fetch live URLs"` (`python main.py --fetch-urls`) |
+| **Viral Analytics** | Interactive Viral DNA score bars & KPI tiles | Chat command `"learn from analytics"` / `"clone winners"` |
+| **Onboarding** | Visual 6-step setup guide with toolchain auditor | Priority-ordered conversational wizard in chat (`SKILL.md`) |
+
+---
+
+## ⚡ What Makes v4.0 Special?
+
+1. **Dual-Mode SaimClip Studio (Web + Agent Skill):**
+   - **Mode 1 (Local Web App):** Zero-Node required. Double-click `start_web.bat` to launch the local FastAPI engine (`127.0.0.1:8765`) and open the high-contrast studio in your default browser.
+   - **Mode 2 (AI Agent Skill):** Use natural language inside Antigravity or any AI agent (`SKILL.md`) to run hands-free clipping batches via chat.
+2. **Priority-Ordered Resumable Onboarding Wizard (`SKILL.md` + Setup View):**
    - Walks new users through setup **one step at a time** in strict priority order, tracking progress in `state/onboarding_state.json`.
-   - **Smart Agent-vs-Manual Boundary:** The agent automatically runs scripts, configures templates, discovers API account IDs, and converts timezones. The user only completes strictly manual actions (account sign-ups, OAuth approvals, Whop campaign joins).
-2. **Saved Campaign Preset Library (`config/presets/` + `"switch campaign"`):**
+   - **Smart Agent-vs-Manual Boundary:** The engine automatically verifies toolchains, discovers API account IDs, and converts timezones. The user only completes strictly manual actions (account sign-ups, OAuth approvals, Whop campaign joins).
+3. **Saved Campaign Preset Library (`config/presets/` + Presets View):**
    - Automatically saves every Whop campaign brief as a reusable preset in `config/presets/<campaign_slug>.json`.
-   - Switch active campaigns instantly in chat (`"switch campaign"`) or CLI (`python main.py --switch-campaign <SLUG_OR_#>`) with zero manual JSON editing.
-3. **Auto-VOD Streamer Watcher (`scripts/vod_watcher.py` + `"check new streams"`):**
+   - Switch active campaigns instantly via the UI top bar, chat (`"switch campaign"`), or CLI (`python main.py --switch-campaign <SLUG_OR_#>`) with zero manual JSON editing.
+4. **Auto-VOD Streamer Watcher (`scripts/vod_watcher.py` + Live Hunt View):**
    - Scans approved streamer channels (`config/watched_streamers.json`) for fresh VODs using lightweight `yt-dlp --flat-playlist --dump-json` (metadata only — **NEVER** downloads full videos).
-   - Ranks fresh streams by view velocity, publish recency, and learned streamer weights. Reply `"clip #1"` to begin atomic clipping immediately.
-4. **Deterministic Auto-Ranker (`scripts/moment_selector.py`):**
+   - Ranks fresh streams by view velocity, publish recency, and learned streamer weights. Click "Send to Create" or reply `"clip #1"` to begin atomic clipping immediately.
+5. **Deterministic Auto-Ranker (`scripts/moment_selector.py`):**
    - Calculates numeric `predicted_viral_score` (0–100) combining base score, moment archetype, hook formula, duration bucket, streamer source, and YouTube Heatmap spike bonus.
    - Auto-sorts pending candidates in `state/job_queue.json` highest-score-first, reserving an 80% proven / 20% exploratory A/B test split.
-5. **Self-Optimizing Viral Learning Engine (`scripts/viral_learner.py`):**
+6. **Self-Optimizing Viral Learning Engine (`scripts/viral_learner.py` + Viral DNA View):**
    - Closed-loop feedback pulling live views, likes, comments, shares, watch time, and Reels skip rates via Zernio Analytics API v1.
    - Settled 24h / 48h / 72h snapshot logic + 6h early warnings, 3,000-view payout alert, and `--clone-winners` blueprint generator.
    - Auto-rewrites compact `memory/learned_rules.md` (strictly ≤ 40 lines).
-6. **2026 Universal Safe-Zone Layout (1080×1920 @ 60fps):**
+7. **2026 Universal Safe-Zone Layout (1080×1920 @ 60fps):**
    - Universal safe box (`890×1250 px`, `x = 60..940`, `y = 250..1490`). Zero text or faces covered by Reels/Shorts UI buttons.
    - Centered 4–7 word opening hook banner at `y = 290px` (or `y = 360px` with logo).
    - Word-by-word `#FFE600` yellow active-word pop ASS captions at `y = 1150–1320px`.
    - `-14 LUFS` loudnorm audio normalization with silence trimming (>0.6s).
    - Dynamic campaign watermark preserving exact 3:1 aspect ratio with zero banner overlap.
-7. **Pre-Flight System Health Check (`scripts/health_check.py`):**
+8. **Pre-Flight System Health Check (`scripts/health_check.py` + `/api/health`):**
    - Comprehensive diagnostic engine auditing binaries, dependencies, configs, presets, memory, and live Zernio connections in read-only mode.
 
 ---
@@ -66,9 +88,27 @@ TELEGRAM_BOT_TOKEN=your_bot_token_here
 TELEGRAM_CHAT_ID=your_chat_id_here
 ```
 
-### 3. Verify System Health
+### 3. Launch in Your Preferred Mode
+
+#### 🚀 Option A: Mode 1 — SaimClip Studio (Local Web App)
+Windows 1-Click launcher:
+```cmd
+start_web.bat
+```
+*Or via terminal:*
+```bash
+python server.py
+```
+Open **`http://127.0.0.1:8765`** in any browser. Zero Node.js or npm required (pre-compiled bundle included).
+
+#### 🤖 Option B: Mode 2 — AI Agent Skill / Terminal CLI
+Run non-destructive pre-flight health check:
 ```bash
 python main.py --health-check
+```
+Or paste any stream URL to start automated clipping:
+```bash
+python main.py "https://www.youtube.com/watch?v=VIDEO_ID"
 ```
 
 ---

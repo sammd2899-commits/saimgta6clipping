@@ -1,6 +1,6 @@
 # SaimGTA6Clipping — Complete System & Operational Guide
 
-Welcome to **SaimGTA6Clipping (v3.0)**! This guide explains how your autonomous clipping engine operates, how to execute daily clipping routines in under 5 minutes, and how the self-learning brain compounds views over time.
+Welcome to **SaimGTA6Clipping (v4.0 Dual-Mode)**! This guide explains how your autonomous clipping engine operates across both Mode 1 (Local Web App) and Mode 2 (AI Agent Skill), how to execute daily clipping routines in under 5 minutes, and how the self-learning brain compounds views over time.
 
 ---
 

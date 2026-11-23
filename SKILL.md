@@ -5,7 +5,8 @@ description: Automated GTA 6 stream clipping studio with priority-ordered resuma
 
 # SaimGTA6Clipping
 
-Autonomous GTA 6 Stream Clipping, Auto-Ranking & Scheduled Multi-Platform Studio (v3.0).  
+Autonomous GTA 6 Stream Clipping, Auto-Ranking & Scheduled Multi-Platform Studio (v4.0 Dual-Mode).  
+Supports both Mode 1 (Local Web App at `http://127.0.0.1:8765` via `start_web.bat`) and Mode 2 (AI Agent Skill / Chat).
 Engineered with an anti-hallucination chunked state machine, smart agent-vs-manual automation, and persistent continuous learning.
 
 ---

@@ -1,0 +1,6 @@
+{
+  "name": "SaimClip Studio",
+  "description": "Minimalistic local web interface for the open-source saimgta6clipping BYOK clipping & Zernio automation engine.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

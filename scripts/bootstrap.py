@@ -112,6 +112,9 @@ def check_and_install_dependencies():
         "numpy": "numpy",
         "python-dotenv": "dotenv",
         "requests": "requests",
+        "fastapi": "fastapi",
+        "uvicorn": "uvicorn",
+        "python-multipart": "multipart",
     }
 
     missing = []

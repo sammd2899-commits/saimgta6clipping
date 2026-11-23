@@ -63,11 +63,15 @@ __pycache__/
 venv/
 env/
 ENV/
-build/
-dist/
+/build/
+/dist/
 *.egg-info/
 
-# Operating System files
+# Web Frontend (track pre-compiled web/dist for zero-Node Windows execution)
+web/node_modules/
+web/.aistudio/
+!web/dist/
+!web/dist/**
 .DS_Store
 Thumbs.db
 desktop.ini
