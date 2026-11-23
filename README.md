@@ -1,4 +1,4 @@
-# SaimGTA6Clipping (v4.0)
+# SaimGTA6Clipping (v4.1)
 
 > **Plug-and-Play, Autonomous GTA 6 Stream Clipping & Auto-Posting Studio.**  
 > Built for creators, agencies, and clipping studios with a Dual-Mode architecture (Local Web App + AI Agent Skill), anti-hallucination chunked state machine, smart priority onboarding wizard, campaign preset switcher, auto-VOD watcher, closed-loop analytics learning engine, and Whop Content Rewards compliance.
@@ -13,7 +13,7 @@
 
 ## 🎯 Choose Your Mode (Dual-Mode Architecture)
 
-SaimGTA6Clipping v4.0 is fully dual-mode. Choose the interface that fits your workflow—both modes run on the exact same local Python engine, configs, presets, and state machine with 100% interoperability:
+SaimGTA6Clipping v4.1 is fully dual-mode. Choose the interface that fits your workflow—both modes run on the exact same local Python engine, configs, presets, and state machine with 100% interoperability:
 
 | Feature / Capability | Mode 1: SaimClip Studio (Local Web App) | Mode 2: AI Agent Skill (CLI / Chat) |
 |---|---|---|
