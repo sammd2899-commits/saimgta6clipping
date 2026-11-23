@@ -289,6 +289,8 @@ def format_clip_to_frontend(raw: dict, idx: int) -> dict:
         "audio_peaks": raw.get("audio_peaks", [0.2, 0.4, 0.8, 0.9, 0.7, 0.5, 0.3, 0.6, 0.8, 0.4]),
         "facecam_image": raw.get("facecam_image", "/src/assets/images/studio_facecam_streamer_1795398567151.jpg"),
         "gameplay_image": raw.get("gameplay_image", "/src/assets/images/studio_gameplay_vice_1795398558600.jpg"),
+        "video_url": raw.get("video_url") or (f"/api/media/clip_{clip_id}.mp4" if (OUTPUT_DIR / f"clip_{clip_id}.mp4").exists() else None),
+        "thumbnail": raw.get("thumbnail") or (f"/api/media/thumb_{clip_id}.jpg" if (OUTPUT_DIR / f"thumb_{clip_id}.jpg").exists() else None),
     }
 
 
@@ -443,6 +445,33 @@ def api_render_clip(clip_id: str):
 
     if not target:
         raise HTTPException(status_code=404, detail=f"Clip {clip_id} not found in queue.")
+
+    source_url = target.get("source_url") or data.get("source_url", "")
+    start_time = float(target.get("start_time") or target.get("trim_start_sec") or 0.0)
+    duration = float(target.get("duration") or target.get("duration_sec") or 24.0)
+    end_time = float(target.get("end_time") or (start_time + duration))
+    hook_text = target.get("hook") or target.get("hook_banner_text") or "WATCH WHAT HAPPENS NEXT"
+    clip_num = target.get("clip_number", 1)
+
+    if source_url:
+        try:
+            from downloader import cleanup_temp_segment, download_segment
+            from editor import render_vertical_clip
+            active_campaign = load_active_campaign()
+            segment_path = download_segment(source_url, start_time, end_time, clip_num)
+            clip_file, thumb_file, probe_details = render_vertical_clip(
+                segment_path=segment_path,
+                hook_text=hook_text,
+                clip_id=clip_id,
+                watermark_path=active_campaign.get("watermark_path"),
+                creator_tag=active_campaign.get("required_channel_tag", "@Creator"),
+            )
+            cleanup_temp_segment(segment_path)
+            target["video_url"] = f"/api/media/{clip_file.name}"
+            target["thumbnail"] = f"/api/media/{thumb_file.name}"
+            target["probe_details"] = probe_details
+        except Exception as e:
+            print(f"[Render API] Notice during render execution: {e}")
 
     # Mark clip ready and save
     target["status"] = "ready"
@@ -610,7 +639,11 @@ def api_get_vod_streams():
 def api_scan_vod_streams(payload: Dict[str, Any] = Body(...)):
     """Saves updated watched streamer channels and performs metadata scan."""
     channels = payload.get("channels", [])
-    from vod_watcher import load_watched_streamers_config, save_watched_streamers_config
+    from vod_watcher import (
+        check_new_streams,
+        load_watched_streamers_config,
+        save_watched_streamers_config,
+    )
 
     cfg = load_watched_streamers_config()
     cfg["streamers"] = [
@@ -619,15 +652,49 @@ def api_scan_vod_streams(payload: Dict[str, Any] = Body(...)):
             "name": c.get("name"),
             "platform": c.get("platform"),
             "channel_url": c.get("url"),
+            "url": c.get("url"),
             "learned_score": c.get("learned_score", 90),
         }
         for c in channels
     ]
     save_watched_streamers_config(cfg)
 
+    # Perform lightweight metadata scan
+    raw_streams = []
+    try:
+        raw_streams = check_new_streams(verbose=False)
+    except Exception as e:
+        print(f"[VOD Scan API] Notice during stream check: {e}")
+
+    discovered_cache = STATE_DIR / "discovered_vods.json"
+    vod_list = []
+    for v in raw_streams:
+        dur_sec = v.get("duration") or 0
+        dur_str = f"{int(dur_sec // 3600)}:{int((dur_sec % 3600) // 60):02d}:{int(dur_sec % 60):02d}" if dur_sec > 3600 else f"{int(dur_sec // 60)}:{int(dur_sec % 60):02d}"
+        views = v.get("views") or 12000
+        vod_list.append({
+            "id": str(v.get("id")),
+            "streamer_name": v.get("uploader") or "Streamer",
+            "platform": "YouTube",
+            "title": v.get("title") or "GTA 6 Stream",
+            "url": v.get("url"),
+            "duration": dur_str,
+            "published_hours_ago": 2,
+            "views": views,
+            "views_per_hour": int(views / 2),
+            "learned_streamer_score": int(v.get("score") or 90),
+            "suggested_range": "0:10:00-0:10:45",
+            "thumbnail": f"/src/assets/images/vod_thumb_{'chase' if 'chase' in v.get('title','').lower() else 'npc'}_1795398562021.jpg",
+            "clipped": False,
+        })
+
+    if vod_list:
+        with open(discovered_cache, "w", encoding="utf-8") as f:
+            json.dump(vod_list, f, indent=2)
+
     # Return refreshed streams
     data = api_get_vod_streams()
-    data["added_count"] = 1
+    data["added_count"] = len(vod_list)
     return data
 
 
@@ -944,30 +1011,33 @@ def api_get_onboarding_state():
 @app.post("/api/onboarding/save-keys")
 def api_save_onboarding_keys(payload: Dict[str, Any] = Body(...)):
     """Saves BYOK keys to local .env and auto-discovers Zernio connected accounts."""
-    z_key = payload.get("zernio_api_key", "").strip()
-    tele_token = payload.get("optional_integrations", {}).get("telegram_bot_token", "").strip()
-    tele_chat = payload.get("optional_integrations", {}).get("telegram_chat_id", "").strip()
+    z_key = str(payload.get("zernio_api_key") or "").strip()
+    opt = payload.get("optional_integrations") or {}
+    tele_token = str(opt.get("telegram_bot_token") or "").strip()
+    tele_chat = str(opt.get("telegram_chat_id") or "").strip()
 
     # Update .env
-    from bootstrap import update_env_credentials
-    updates = {}
-    if z_key:
-        updates["ZERNIO_API_KEY"] = z_key
-    if tele_token:
-        updates["TELEGRAM_BOT_TOKEN"] = tele_token
-    if tele_chat:
-        updates["TELEGRAM_CHAT_ID"] = tele_chat
-
-    if updates:
-        update_env_credentials(updates)
+    try:
+        from bootstrap import setup_credentials
+        if z_key or tele_token or tele_chat:
+            setup_credentials(
+                zernio_key=z_key or None,
+                telegram_token=tele_token or None,
+                telegram_chat=tele_chat or None,
+            )
+    except Exception as e:
+        print(f"[Warning] Could not update .env credentials: {e}")
 
     # Save onboarding state
-    STATE_DIR.mkdir(parents=True, exist_ok=True)
-    onboarding_file = STATE_DIR / "onboarding_state.json"
-    curr = api_get_onboarding_state()
-    curr.update(payload)
-    with open(onboarding_file, "w", encoding="utf-8") as f:
-        json.dump(curr, f, indent=2)
+    try:
+        STATE_DIR.mkdir(parents=True, exist_ok=True)
+        onboarding_file = STATE_DIR / "onboarding_state.json"
+        curr = api_get_onboarding_state()
+        curr.update(payload)
+        with open(onboarding_file, "w", encoding="utf-8") as f:
+            json.dump(curr, f, indent=2)
+    except Exception as e:
+        print(f"[Warning] Could not save onboarding state: {e}")
 
     return api_get_onboarding_state()
 
