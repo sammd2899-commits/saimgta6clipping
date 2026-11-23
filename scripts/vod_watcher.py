@@ -238,7 +238,7 @@ def check_new_streams(verbose: bool = True) -> list[dict]:
 
     for s in streamers:
         c_name = s.get("name", "Creator")
-        c_url = s.get("url")
+        c_url = s.get("channel_url") or s.get("url")
         if not c_url:
             continue
 
@@ -303,13 +303,14 @@ def add_streamer_channel(url: str, name: str, niche: str = "GTA 6 / Gaming", pri
 
     # Check if already present
     for s in streamers:
-        if s.get("url") == url:
+        if s.get("url") == url or s.get("channel_url") == url:
             print(f"[VOD Watcher] Streamer channel already watched: {s.get('name')}")
             return
 
     streamers.append({
         "name": name,
         "platform": "youtube",
+        "channel_url": url,
         "url": url,
         "niche": niche,
         "priority_weight": priority,
@@ -331,7 +332,7 @@ def list_watched_streamers():
     else:
         for idx, s in enumerate(streamers, 1):
             print(f"[#{idx}] {s.get('name')} ({s.get('niche')})")
-            print(f"     • URL:      {s.get('url')}")
+            print(f"     • URL:      {s.get('channel_url') or s.get('url')}")
             print(f"     • Priority: {s.get('priority_weight', 1.0)}x")
             print(f"     • Notes:    {s.get('notes', '')}")
             print()

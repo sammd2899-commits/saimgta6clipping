@@ -249,6 +249,14 @@ def setup_credentials(zernio_key: str = None, telegram_token: str = None, telegr
         print(f"  ✔ Updated .env credentials: {', '.join(updates.keys())}.")
 
 
+def update_env_credentials(updates: dict):
+    setup_credentials(
+        zernio_key=updates.get("ZERNIO_API_KEY"),
+        telegram_token=updates.get("TELEGRAM_BOT_TOKEN"),
+        telegram_chat=updates.get("TELEGRAM_CHAT_ID"),
+    )
+
+
 def run_bootstrap(zernio_key: str = None, telegram_token: str = None, telegram_chat: str = None, interactive: bool = False) -> bool:
     print("=" * 75)
     print("🚀 SAIMGTA6CLIPPING — LEAN AUTO-INSTALLER & WORKSPACE BOOTSTRAPPER")

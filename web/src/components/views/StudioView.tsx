@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   AlertCircle,
   CalendarClock,
@@ -55,6 +55,17 @@ export function StudioView({
   );
   const [scheduling, setScheduling] = useState(false);
   const [scheduleError, setScheduleError] = useState<string | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      if (playing) {
+        videoRef.current.play().catch(() => {});
+      } else {
+        videoRef.current.pause();
+      }
+    }
+  }, [playing]);
 
   useEffect(() => {
     if (!clip) return;
@@ -204,7 +215,23 @@ export function StudioView({
             data-testid="vertical-stage"
             className="relative w-full max-w-[304px] aspect-[9/16] rounded-2xl border border-white/[0.12] bg-[#09090B] overflow-hidden select-none"
           >
-            {clip.layout_mode === 'split-35-65' ? (
+            {clip.video_url ? (
+              <div className="relative h-full w-full bg-[#09090B] flex items-center justify-center overflow-hidden">
+                <video
+                  ref={videoRef}
+                  src={clip.video_url}
+                  className="h-full w-full object-cover"
+                  playsInline
+                  loop
+                  muted
+                  onTimeUpdate={(e) => {
+                    const t = (e.target as HTMLVideoElement).currentTime;
+                    setCurrentTime(Number(t.toFixed(1)));
+                  }}
+                  data-testid="rendered-video-player"
+                />
+              </div>
+            ) : clip.layout_mode === 'split-35-65' ? (
               <div className="flex flex-col h-full w-full">
                 {/* Top 35% Facecam */}
                 <div className="relative h-[35%] w-full overflow-hidden border-b border-black/60 bg-[#141417]">

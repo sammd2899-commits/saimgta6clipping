@@ -29,6 +29,7 @@ def download_segment(url: str, start_time: float, end_time: float, clip_id: int)
 
     cmd = [
         *ytdlp_cmd,
+        "--no-check-certificates",
         "--js-runtimes",
         "node",
         "--extractor-args",
@@ -50,6 +51,7 @@ def download_segment(url: str, start_time: float, end_time: float, clip_id: int)
     if proc.returncode != 0 or not output_path.exists() or output_path.stat().st_size == 0:
         cmd_fallback = [
             *ytdlp_cmd,
+            "--no-check-certificates",
             "--js-runtimes",
             "node",
             "--extractor-args",

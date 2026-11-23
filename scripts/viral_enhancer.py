@@ -27,6 +27,7 @@ from config_manager import (
     CONFIG_DIR,
     OUTPUT_DIR,
     TEMP_DIR,
+    get_models_dir,
     load_active_campaign,
 )
 

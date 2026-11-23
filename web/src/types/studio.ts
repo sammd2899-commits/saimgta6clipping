@@ -80,6 +80,8 @@ export interface ClipJob {
   audio_peaks: number[]; // 0..1 normalized waveform peaks
   facecam_image: string;
   gameplay_image: string;
+  video_url?: string;
+  thumbnail?: string;
 }
 
 export interface ActiveJobProgress {
