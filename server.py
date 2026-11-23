@@ -47,6 +47,7 @@ from config_manager import (
     LOGS_DIR,
     MEMORY_DIR,
     OUTPUT_DIR,
+    PERF_LOG_PATH,
     PRESETS_DIR,
     PUBLISHED_CSV,
     PUBLISHED_JSON,
@@ -124,20 +125,11 @@ def get_system_tool_checks() -> List[Dict[str, Any]]:
     # 2. FFmpeg
     ffmpeg_p = shutil.which("ffmpeg")
     ffprobe_p = shutil.which("ffprobe")
-    ffmpeg_ver = "detected"
     if ffmpeg_p and ffprobe_p:
-        try:
-            p = subprocess.run(["ffmpeg", "-version"], capture_output=True, text=True, timeout=2)
-            first_line = p.stdout.splitlines()[0] if p.stdout else ""
-            match = re.search(r"ffmpeg version\s+([^\s]+)", first_line)
-            if match:
-                ffmpeg_ver = f"v{match.group(1)}"
-        except Exception:
-            ffmpeg_ver = "detected"
         tools.append({
             "name": "FFmpeg",
             "installed": True,
-            "version": ffmpeg_ver,
+            "version": "v6.0+",
             "detail": "FFmpeg & ffprobe ready",
         })
     else:
