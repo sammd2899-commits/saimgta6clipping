@@ -103,6 +103,7 @@ export const INITIAL_ONBOARDING: OnboardingState = {
   brand_name: '',
   channel_handle: '',
   zernio_api_key: '',
+  gemini_api_key: '',
   discovered_accounts: [],
   default_ist_slot: '18:00 IST',
   ig_checklist: {

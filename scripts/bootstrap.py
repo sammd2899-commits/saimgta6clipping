@@ -202,7 +202,7 @@ def ensure_workspace_and_templates():
     print("  ✔ Workspace directory structure and configuration templates verified.")
 
 
-def setup_credentials(zernio_key: str = None, telegram_token: str = None, telegram_chat: str = None, interactive: bool = False):
+def setup_credentials(zernio_key: str = None, telegram_token: str = None, telegram_chat: str = None, gemini_api_key: str = None, interactive: bool = False):
     if not ENV_PATH.exists() and ENV_EXAMPLE.exists():
         shutil.copy(ENV_EXAMPLE, ENV_PATH)
         print("  ✔ Created .env from .env.example.")
@@ -212,12 +212,14 @@ def setup_credentials(zernio_key: str = None, telegram_token: str = None, telegr
         lines = ENV_PATH.read_text(encoding="utf-8").splitlines()
 
     updates = {}
-    if zernio_key:
+    if zernio_key is not None:
         updates["ZERNIO_API_KEY"] = zernio_key
-    if telegram_token:
+    if telegram_token is not None:
         updates["TELEGRAM_BOT_TOKEN"] = telegram_token
-    if telegram_chat:
+    if telegram_chat is not None:
         updates["TELEGRAM_CHAT_ID"] = telegram_chat
+    if gemini_api_key is not None:
+        updates["GEMINI_API_KEY"] = gemini_api_key
 
     if interactive and not zernio_key:
         try:
@@ -254,6 +256,7 @@ def update_env_credentials(updates: dict):
         zernio_key=updates.get("ZERNIO_API_KEY"),
         telegram_token=updates.get("TELEGRAM_BOT_TOKEN"),
         telegram_chat=updates.get("TELEGRAM_CHAT_ID"),
+        gemini_api_key=updates.get("GEMINI_API_KEY"),
     )
 
 

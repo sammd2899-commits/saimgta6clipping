@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Check, Plus, ShieldCheck, Upload, X } from 'lucide-react';
+import { Check, Plus, ShieldCheck, Trash2, Upload, X } from 'lucide-react';
 import type { CampaignPreset } from '../../types/studio';
 import { parseWhopBrief } from '../../utils/clipLogic';
 
@@ -25,6 +25,7 @@ export function PresetsView({
   const [whopHandle, setWhopHandle] = useState('');
   const [logoDataUrl, setLogoDataUrl] = useState<string | undefined>(undefined);
   const [logoFileName, setLogoFileName] = useState<string | null>(null);
+  const [references, setReferences] = useState<string[]>(['']);
   const [formError, setFormError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
@@ -32,6 +33,25 @@ export function PresetsView({
     if (!rawBrief.trim()) return null;
     return parseWhopBrief(rawBrief);
   }, [rawBrief]);
+
+  const handleAddReference = () => {
+    setReferences((prev) => [...prev, '']);
+  };
+
+  const handleReferenceChange = (idx: number, val: string) => {
+    setReferences((prev) => {
+      const copy = [...prev];
+      copy[idx] = val;
+      return copy;
+    });
+  };
+
+  const handleRemoveReference = (idx: number) => {
+    setReferences((prev) => {
+      if (prev.length <= 1) return [''];
+      return prev.filter((_, i) => i !== idx);
+    });
+  };
 
   const handleLogoFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -62,6 +82,8 @@ export function PresetsView({
         .join('')
         .toUpperCase();
 
+      const cleanedRefs = references.map((r) => r.trim()).filter(Boolean);
+
       await onCreatePreset({
         name: parsed.name,
         whop_handle:
@@ -77,11 +99,13 @@ export function PresetsView({
         logo_accent: '#FFE600',
         logo_data_url: logoDataUrl,
         raw_brief: rawBrief.trim(),
+        references: cleanedRefs,
       });
       setRawBrief('');
       setWhopHandle('');
       setLogoDataUrl(undefined);
       setLogoFileName(null);
+      setReferences(['']);
       setModalOpen(false);
     } finally {
       setSaving(false);
@@ -198,6 +222,31 @@ export function PresetsView({
                   </dd>
                 </div>
               </dl>
+
+              {/* Reference Material & Style Profile Badge */}
+              {preset.references && preset.references.length > 0 && (
+                <div className="rounded-lg border border-white/[0.08] bg-[#09090B] p-3 space-y-1 text-xs">
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="font-medium text-[#FAFAFA]">Reference Style Profile</span>
+                    <span className="font-mono text-[#FFE600]">{preset.references.length} ref{preset.references.length > 1 ? 's' : ''} analyzed</span>
+                  </div>
+                  {preset.reference_style_profile?.summary && (
+                    <p className="text-[11px] text-[#A1A1AA] leading-relaxed">
+                      {preset.reference_style_profile.summary}
+                    </p>
+                  )}
+                  {preset.reference_style_profile?.clip_archetype && (
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      <span className="rounded bg-white/[0.06] px-2 py-0.5 font-mono text-[10px] text-[#22C55E]">
+                        Archetype: {preset.reference_style_profile.clip_archetype}
+                      </span>
+                      <span className="rounded bg-white/[0.06] px-2 py-0.5 font-mono text-[10px] text-[#FAFAFA]">
+                        Layout: {preset.reference_style_profile.layout}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="mt-5 pt-4 border-t border-white/[0.06] flex items-center justify-between gap-3">
@@ -307,6 +356,56 @@ export function PresetsView({
                       className="sr-only"
                     />
                   </label>
+                </div>
+              </div>
+
+              {/* Reference Material & Examples (Multi-Reference Inputs) */}
+              <div className="space-y-2.5 border-t border-white/[0.06] pt-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="block text-xs font-medium text-[#FAFAFA]">
+                      Reference Material &amp; Examples
+                    </span>
+                    <span className="text-[11px] text-[#71717A]">
+                      Add reference video URLs (YouTube/Drive) or style/format notes for auto-styling.
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleAddReference}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-white/[0.1] bg-[#111113] hover:border-[#FFE600]/50 px-2.5 py-1 text-xs font-medium text-[#FAFAFA] transition-colors cursor-pointer shrink-0"
+                  >
+                    <Plus className="h-3 w-3 text-[#FFE600]" />
+                    <span>Add Reference</span>
+                  </button>
+                </div>
+
+                <div className="space-y-2 max-h-[160px] overflow-y-auto pr-1">
+                  {references.map((ref, idx) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        value={ref}
+                        onChange={(e) => handleReferenceChange(idx, e.target.value)}
+                        placeholder={
+                          idx === 0
+                            ? 'e.g., https://youtube.com/watch?v=... or Drive clip link'
+                            : 'e.g., Fast cuts opening on crazy car crash'
+                        }
+                        className="flex-1 rounded-lg border border-white/[0.08] bg-[#09090B] px-3 py-2 text-xs text-[#FAFAFA] placeholder:text-[#71717A] focus:border-[#FFE600]/60 focus:outline-none"
+                      />
+                      {references.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveReference(idx)}
+                          className="rounded-lg p-2 text-[#71717A] hover:bg-white/[0.06] hover:text-[#EF4444] transition-colors cursor-pointer shrink-0"
+                          title="Remove reference"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      )}
+                    </div>
+                  ))}
                 </div>
               </div>
 

@@ -4,6 +4,7 @@ import {
   INITIAL_ONBOARDING,
 } from '../data/demoData';
 import type {
+  BrandKitResult,
   CampaignPreset,
   ClipJob,
   DiscoveredVod,
@@ -240,5 +241,20 @@ export async function saveOnboardingKeys(
   return await request<OnboardingState>('/onboarding/save-keys', {
     method: 'POST',
     body: JSON.stringify(patch),
+  });
+}
+
+export interface GenerateBrandKitPayload {
+  platform: 'instagram' | 'youtube' | 'both';
+  brand_name?: string;
+  niche?: string;
+}
+
+export async function generateBrandKit(
+  payload: GenerateBrandKitPayload
+): Promise<BrandKitResult> {
+  return await request<BrandKitResult>('/onboarding/generate-brand-kit', {
+    method: 'POST',
+    body: JSON.stringify(payload),
   });
 }

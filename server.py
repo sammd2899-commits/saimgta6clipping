@@ -205,6 +205,8 @@ def format_preset_to_frontend(p_dict: dict, is_active: bool, slug: str) -> dict:
         "logo_accent": p_dict.get("logo_accent", "#FFE600"),
         "logo_data_url": p_dict.get("logo_data_url"),
         "raw_brief": p_dict.get("raw_brief", ""),
+        "references": p_dict.get("references", []),
+        "reference_style_profile": p_dict.get("reference_style_profile", {}),
     }
 
 
@@ -335,6 +337,9 @@ def api_plan_job(payload: Dict[str, Any] = Body(...)):
             pass
 
     active_campaign = load_active_campaign()
+    ref_profile = active_campaign.get("reference_style_profile") or {}
+    pref_archetype_name = ref_profile.get("clip_archetype")
+    pref_layout = ref_profile.get("layout", "split-35-65")
 
     # Discover candidate moments using moment_selector
     from moment_selector import PRIORITY_THEMES, score_candidate
@@ -345,6 +350,8 @@ def api_plan_job(payload: Dict[str, Any] = Body(...)):
         f"[yt-dlp] Resolved source metadata for {url}",
         f"[ranker] Applying Viral DNA weights (80/20 A/B allocation)",
     ]
+    if ref_profile.get("summary"):
+        logs.append(f"[reference_analyzer] Applying campaign reference style: {ref_profile.get('summary')}")
 
     base_num = 1
     if QUEUE_PATH.exists():
@@ -361,6 +368,11 @@ def api_plan_job(payload: Dict[str, Any] = Body(...)):
     for i in range(clip_count):
         theme_idx = i % len(PRIORITY_THEMES)
         theme = PRIORITY_THEMES[theme_idx]
+        if pref_archetype_name and i == 0:
+            arch_match = next((t for t in PRIORITY_THEMES if t["id"] in pref_archetype_name.lower().replace(" ", "_") or pref_archetype_name.lower() in t["name"]), None)
+            if arch_match:
+                theme = arch_match
+
         is_ab = i >= int(clip_count * 0.8)
 
         candidate_raw = {
@@ -373,6 +385,7 @@ def api_plan_job(payload: Dict[str, Any] = Body(...)):
             "duration": 24.0,
             "theme": theme["id"],
             "hook": theme["hooks"][i % len(theme["hooks"])],
+            "layout_mode": pref_layout,
             "ab_test": is_ab,
             "status": "ready" if (i == 0 and one_clip_approval) else "queued",
             "hashtags": active_campaign.get("required_hashtags", ["#GTA6", "#GTAVI"]),
@@ -725,6 +738,15 @@ def api_create_preset(payload: Dict[str, Any] = Body(...)):
     name = payload.get("name", "New Campaign")
     slug = slugify_campaign_name(name)
 
+    raw_refs = payload.get("references", [])
+    if isinstance(raw_refs, list):
+        references = [str(r).strip() for r in raw_refs if str(r).strip()]
+    else:
+        references = []
+
+    from reference_analyzer import analyze_references
+    style_profile = analyze_references(references, name)
+
     preset_data = {
         "campaign_name": name,
         "campaign_slug": slug,
@@ -739,6 +761,8 @@ def api_create_preset(payload: Dict[str, Any] = Body(...)):
         "logo_accent": payload.get("logo_accent", "#FFE600"),
         "logo_data_url": payload.get("logo_data_url"),
         "raw_brief": payload.get("raw_brief", ""),
+        "references": references,
+        "reference_style_profile": style_profile,
         "created_at": datetime.datetime.now().astimezone().isoformat(),
     }
 
@@ -963,6 +987,7 @@ def api_get_onboarding_state():
 
     env_vars = load_env()
     key = env_vars.get("ZERNIO_API_KEY", "")
+    gemini_key = env_vars.get("GEMINI_API_KEY", "")
 
     # Load discovered accounts
     accounts = []
@@ -985,6 +1010,7 @@ def api_get_onboarding_state():
         "brand_name": data.get("brand_name", ""),
         "channel_handle": data.get("channel_handle", ""),
         "zernio_api_key": key if key and not key.startswith("your_") else "",
+        "gemini_api_key": gemini_key if gemini_key and not gemini_key.startswith("your_") else "",
         "discovered_accounts": accounts,
         "default_ist_slot": data.get("default_ist_slot", "18:00 IST"),
         "ig_checklist": data.get("ig_checklist", {
@@ -1012,6 +1038,7 @@ def api_get_onboarding_state():
 def api_save_onboarding_keys(payload: Dict[str, Any] = Body(...)):
     """Saves BYOK keys to local .env and auto-discovers Zernio connected accounts."""
     z_key = str(payload.get("zernio_api_key") or "").strip()
+    g_key = str(payload.get("gemini_api_key") or "").strip()
     opt = payload.get("optional_integrations") or {}
     tele_token = str(opt.get("telegram_bot_token") or "").strip()
     tele_chat = str(opt.get("telegram_chat_id") or "").strip()
@@ -1019,11 +1046,12 @@ def api_save_onboarding_keys(payload: Dict[str, Any] = Body(...)):
     # Update .env
     try:
         from bootstrap import setup_credentials
-        if z_key or tele_token or tele_chat:
+        if z_key or g_key or tele_token or tele_chat or "gemini_api_key" in payload or "zernio_api_key" in payload:
             setup_credentials(
                 zernio_key=z_key or None,
                 telegram_token=tele_token or None,
                 telegram_chat=tele_chat or None,
+                gemini_api_key=g_key or None,
             )
     except Exception as e:
         print(f"[Warning] Could not update .env credentials: {e}")
@@ -1040,6 +1068,36 @@ def api_save_onboarding_keys(payload: Dict[str, Any] = Body(...)):
         print(f"[Warning] Could not save onboarding state: {e}")
 
     return api_get_onboarding_state()
+
+
+@app.post("/api/onboarding/generate-brand-kit")
+def api_generate_brand_kit(payload: Dict[str, Any] = Body(...)):
+    """Generates unique brand profile kit with setup guide and saves to config/brand_kit.md."""
+    platform = payload.get("platform", "instagram")
+    brand_name = payload.get("brand_name")
+    niche = payload.get("niche", "GTA 6 / Gaming")
+
+    from brand_kit_generator import generate_profile_kit
+    result = generate_profile_kit(platform=platform, brand_name=brand_name, niche=niche)
+
+    # Sync to onboarding state
+    try:
+        STATE_DIR.mkdir(parents=True, exist_ok=True)
+        onboarding_file = STATE_DIR / "onboarding_state.json"
+        odata = {}
+        if onboarding_file.exists():
+            with open(onboarding_file, "r", encoding="utf-8") as f:
+                odata = json.load(f)
+        if result.get("brand_name"):
+            odata["brand_name"] = result["brand_name"]
+        if result.get("handles"):
+            odata["channel_handle"] = result["handles"][0]
+        with open(onboarding_file, "w", encoding="utf-8") as f:
+            json.dump(odata, f, indent=2)
+    except Exception as e:
+        print(f"[Brand Kit API] Notice syncing onboarding state: {e}")
+
+    return result
 
 
 @app.get("/api/media/{filename}")

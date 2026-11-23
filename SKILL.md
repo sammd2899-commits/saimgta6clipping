@@ -132,12 +132,26 @@ After Phase A completes, present this clean menu:
 
 ---
 
-## 5. Anti-Hallucination Execution Loop (Stage 2)
+## 6. Multi-Reference Campaign Analyzer & BYOK Gemini AI (v4.2)
 
-During clipping execution, the agent must enforce the **strict 1-clip-at-a-time stop-and-approve loop**:
-1. Download small ~25s window into `temp/`.
-2. Render 1080×1920 60fps vertical format with 35/65 split, hook banner, and `#FFE600` captions.
-3. Validate with hard `ffprobe` and Python compliance gate.
-4. Schedule to Instagram + YouTube via Zernio.
-5. Purge temporary raw segment.
-6. Report clip completion and ask user for confirmation before moving to the next clip in queue.
+### 6.1 Bring-Your-Own-Key (BYOK) Gemini AI Backend
+- SaimClip Studio supports Google Gemini (`gemini-2.5-flash`) for local AI moment selection, reference material analysis, and profile generation.
+- Users can obtain a free key at `aistudio.google.com` and save it via **Setup → Step 5** or `.env` (`GEMINI_API_KEY=`).
+- **Deterministic Zero-Dependency Fallback:** If `GEMINI_API_KEY` is not configured, the entire pipeline automatically falls back to deterministic heuristic algorithms and high-converting templates with zero crashes.
+
+### 6.2 Multi-Reference Campaign Style Extraction
+- In **Presets → New Campaign Preset**, users can add multiple reference inputs (`+ Add Reference`):
+  - Reference Video URLs (YouTube, Drive, Instagram)
+  - Style, pacing, and visual formatting notes
+- `scripts/reference_analyzer.py` inspects all references and generates a persistent `reference_style_profile` containing:
+  - `pacing`: Pacing target (e.g. "Fast-paced 20-24s sweet spot with chaos opening in first 0.8s")
+  - `hook_style`: Specific hook banner wording and safe zone position
+  - `caption_tone`: Word pop highlights and subtitle energy
+  - `layout`: Layout mode (`split-35-65` vs `blurred-fill`)
+  - `clip_archetype`: Target moment archetype bias
+- Every clip planned or rendered for that campaign automatically enforces both Whop campaign compliance rules AND the extracted reference style profile.
+
+### 6.3 1-Click Platform Setup Guides & Brand Kit Generation
+- **Setup View Step 3 (Instagram)** and **Step 4 (YouTube)** feature dedicated `Open Guide & Generate Profile` buttons.
+- Opens platform-tailored guides (Professional mode, public visibility, high quality upload, FB page linking, US country targeting, feature eligibility phone verification).
+- Includes 1-click **Generate Fresh Profile Kit** calling `scripts/brand_kit_generator.py` with 1-click Copy buttons for Channel Name, Handle ideas, Bio, Keywords, and 5 hashtags, automatically saving to `config/brand_kit.md`.

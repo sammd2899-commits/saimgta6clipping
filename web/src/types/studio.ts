@@ -128,6 +128,17 @@ export interface DiscoveredVod {
   clipped: boolean;
 }
 
+export interface ReferenceStyleProfile {
+  pacing?: string;
+  hook_style?: string;
+  caption_tone?: string;
+  layout?: string;
+  clip_archetype?: string;
+  extracted_keywords?: string[];
+  summary?: string;
+  reference_count?: number;
+}
+
 export interface CampaignPreset {
   id: string;
   name: string;
@@ -143,6 +154,8 @@ export interface CampaignPreset {
   logo_accent: string;
   logo_data_url?: string;
   raw_brief?: string;
+  references?: string[];
+  reference_style_profile?: ReferenceStyleProfile;
 }
 
 export interface ScoreBarMetric {
@@ -182,11 +195,24 @@ export interface ZernioAccount {
   status: 'connected' | 'needs-reauth';
 }
 
+export interface BrandKitResult {
+  brand_name: string;
+  handles: string[];
+  bio: string;
+  keywords: string[];
+  hashtags: string[];
+  platform: 'instagram' | 'youtube';
+  guide_title: string;
+  guide_steps: string[];
+  saved_to: string;
+}
+
 export interface OnboardingState {
   completed_steps: string[];
   brand_name: string;
   channel_handle: string;
   zernio_api_key: string;
+  gemini_api_key?: string;
   discovered_accounts: ZernioAccount[];
   default_ist_slot: string;
   ig_checklist: {
